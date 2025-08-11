@@ -1,7 +1,7 @@
 package model;
 
-public class Moto extends Veiculo{
-
+//public class Moto extends Veiculo{
+public class Moto implements IVeiculo{
     public String acelerar() {
         return "Acelerando a moto";
     }
