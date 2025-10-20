@@ -19,7 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "estadosactivities"
-include(":app")
+rootProject.name = "intents"
 include(":app")
  
