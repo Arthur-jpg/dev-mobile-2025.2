@@ -20,7 +20,7 @@ public class A {
 
         A arthur = new A();
         A arthur2 = new A();
-        
+
     }
 
     void ma2() {
