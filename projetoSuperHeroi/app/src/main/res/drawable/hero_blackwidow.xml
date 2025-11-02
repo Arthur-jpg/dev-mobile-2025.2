@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Black circle background -->
+    <path
+        android:fillColor="@color/blackwidow_black"
+        android:pathData="M100,20 C144.18,20 180,55.82 180,100 C180,144.18 144.18,180 100,180 C55.82,180 20,144.18 20,100 C20,55.82 55.82,20 100,20 Z"/>
+    
+    <!-- Red hourglass symbol -->
+    <path
+        android:fillColor="@color/blackwidow_red"
+        android:pathData="M100,60 L120,80 L120,100 L100,110 L80,100 L80,80 Z M100,110 L120,120 L120,140 L100,160 L80,140 L80,120 Z"/>
+    
+    <!-- Spider legs -->
+    <path
+        android:fillColor="@color/blackwidow_black"
+        android:pathData="M100,100 L70,70 M100,100 L130,70 M100,100 L70,130 M100,100 L130,130"
+        android:strokeColor="@color/blackwidow_red"
+        android:strokeWidth="3"/>
+</vector>

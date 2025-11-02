@@ -1,0 +1,102 @@
+<resources>
+    <string name="app_name">Quiz dos Heróis</string>
+    
+    <!-- Main Activity -->
+    <string name="welcome_title">Descubra qual herói você é!</string>
+    <string name="welcome_subtitle">Responda o quiz e encontre seu herói interior</string>
+    <string name="enter_name_hint">Digite seu nome</string>
+    <string name="terms_checkbox">Aceito compartilhar meu resultado</string>
+    <string name="start_quiz_button">Começar Quiz</string>
+    <string name="name_required">Por favor, digite seu nome</string>
+    <string name="terms_required">Você precisa aceitar os termos</string>
+    
+    <!-- Quiz Activity -->
+    <string name="quiz_title">Quiz dos Heróis</string>
+    <string name="question_1">O que você prefere?</string>
+    <string name="q1_option1">Tecnologia e inovação</string>
+    <string name="q1_option2">Força bruta e poder</string>
+    <string name="q1_option3">Estratégia e liderança</string>
+    <string name="q1_option4">Magia e misticismo</string>
+    
+    <string name="question_2">Como você resolve problemas?</string>
+    <string name="q2_option1">Com inteligência e gadgets</string>
+    <string name="q2_option2">Com ação e força física</string>
+    <string name="q2_option3">Com planejamento e tática</string>
+    <string name="q2_option4">Com poderes sobrenaturais</string>
+    
+    <string name="question_3">Qual é seu maior valor?</string>
+    <string name="q3_option1">Progresso e ciência</string>
+    <string name="q3_option2">Justiça e proteção</string>
+    <string name="q3_option3">Dever e honra</string>
+    <string name="q3_option4">Conhecimento e sabedoria</string>
+    <string name="q3_option5">Coragem e bravura</string>
+    <string name="q3_option6">Agilidade e esperteza</string>
+    <string name="q3_option7">Disciplina e precisão</string>
+    
+    <string name="question_4">Onde você se sente mais confortável?</string>
+    <string name="q4_option1">Em um laboratório high-tech</string>
+    <string name="q4_option2">Na natureza selvagem</string>
+    <string name="q4_option3">Em campo de batalha</string>
+    <string name="q4_option4">Em um santuário místico</string>
+    <string name="q4_option5">Em Asgard ou lugares mitológicos</string>
+    <string name="q4_option6">Nas sombras, em missões secretas</string>
+    <string name="q4_option7">Na cidade, protegendo pessoas comuns</string>
+    
+    <string name="question_5">Qual é sua maior habilidade?</string>
+    <string name="q5_option1">Inventar e criar tecnologia</string>
+    <string name="q5_option2">Força sobre-humana</string>
+    <string name="q5_option3">Liderança inspiradora</string>
+    <string name="q5_option4">Manipulação de energia mística</string>
+    <string name="q5_option5">Controle de elementos naturais</string>
+    <string name="q5_option6">Espionagem e combate tático</string>
+    <string name="q5_option7">Reflexos e sentidos apurados</string>
+    
+    <string name="question_6">Como você enfrenta o perigo?</string>
+    <string name="q6_option1">Com um plano e tecnologia de ponta</string>
+    <string name="q6_option2">Com toda força e fúria</string>
+    <string name="q6_option3">Com estratégia e trabalho em equipe</string>
+    <string name="q6_option4">Com feitiços e portais</string>
+    <string name="q6_option5">Com trovões e martelo</string>
+    <string name="q6_option6">Com furtividade e precisão</string>
+    <string name="q6_option7">Com responsabilidade e improviso</string>
+    
+    <string name="next_question">Próxima</string>
+    <string name="see_result">Ver Resultado</string>
+    <string name="please_answer">Por favor, responda a pergunta</string>
+    
+    <!-- Result Activity -->
+    <string name="result_title">Seu herói é:</string>
+    <string name="share_result">Compartilhar Resultado</string>
+    <string name="restart_quiz">Fazer Novamente</string>
+    <string name="view_github">Ver Projeto no GitHub</string>
+    
+    <!-- Heroes -->
+    <string name="hero_ironman">Homem de Ferro</string>
+    <string name="hero_ironman_desc">Você é um gênio da tecnologia! Inovador, criativo e sempre à frente do seu tempo. Tony Stark seria seu melhor amigo!</string>
+    
+    <string name="hero_hulk">Hulk</string>
+    <string name="hero_hulk_desc">Você é poderoso e protetor! Quando necessário, sua força e determinação são imbatíveis. HULK ESMAGA!</string>
+    
+    <string name="hero_captainamerica">Capitão América</string>
+    <string name="hero_captainamerica_desc">Você é um líder nato! Estratégico, honrado e sempre pronto para defender o que é certo. O escudo da justiça é seu!</string>
+    
+    <string name="hero_doctorstrange">Doutor Estranho</string>
+    <string name="hero_doctorstrange_desc">Você é místico e sábio! Busca conhecimento além do comum e possui uma mente aberta para o impossível.</string>
+    
+    <string name="hero_thor">Thor</string>
+    <string name="hero_thor_desc">Você é poderoso e nobre! Com a força de um deus e o coração de um guerreiro, você protege os que ama com trovões e honra!</string>
+    
+    <string name="hero_blackwidow">Viúva Negra</string>
+    <string name="hero_blackwidow_desc">Você é estratégico e letal! Mestre em espionagem e combate, você resolve problemas com precisão e inteligência.</string>
+    
+    <string name="hero_spiderman">Homem-Aranha</string>
+    <string name="hero_spiderman_desc">Você é ágil e responsável! Com grandes poderes vêm grandes responsabilidades, e você está sempre pronto para ajudar o próximo!</string>
+    
+    <!-- Tiebreaker Activity -->
+    <string name="tiebreaker_title">Empate! 🤔</string>
+    <string name="tiebreaker_subtitle">Você tem características de múltiplos heróis! Escolha aquele que mais combina com você:</string>
+    <string name="choose_hero">Escolher este herói</string>
+    
+    <string name="share_text">Eu sou mais parecido com %1$s! 💥 Faça o quiz também: https://github.com/Arthur-jpg</string>
+    <string name="share_via">Compartilhar via</string>
+</resources>

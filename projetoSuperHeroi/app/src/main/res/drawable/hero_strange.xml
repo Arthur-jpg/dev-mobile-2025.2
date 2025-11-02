@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Purple star background -->
+    <path
+        android:fillColor="@color/strange_purple"
+        android:pathData="M100,20 L130,80 L190,80 L140,120 L160,180 L100,140 L40,180 L60,120 L10,80 L70,80 Z"/>
+    
+    <!-- Dark purple circle center -->
+    <path
+        android:fillColor="#FF4A148C"
+        android:pathData="M100,70 C116.57,70 130,83.43 130,100 C130,116.57 116.57,130 100,130 C83.43,130 70,116.57 70,100 C70,83.43 83.43,70 100,70 Z"/>
+    
+    <!-- Mystic symbol -->
+    <path
+        android:fillColor="@color/strange_purple"
+        android:pathData="M100,90 L110,100 L100,110 L90,100 Z"/>
+</vector>

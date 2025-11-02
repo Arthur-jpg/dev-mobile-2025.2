@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Silver circle background -->
+    <path
+        android:fillColor="@color/thor_silver"
+        android:pathData="M100,20 C144.18,20 180,55.82 180,100 C180,144.18 144.18,180 100,180 C55.82,180 20,144.18 20,100 C20,55.82 55.82,20 100,20 Z"/>
+    
+    <!-- Blue lightning bolt -->
+    <path
+        android:fillColor="@color/thor_blue"
+        android:pathData="M110,40 L90,100 L110,100 L90,160 L130,90 L110,90 Z"/>
+    
+    <!-- Hammer shape -->
+    <path
+        android:fillColor="@color/thor_silver"
+        android:pathData="M85,70 L115,70 L115,85 L105,85 L105,110 L95,110 L95,85 L85,85 Z"/>
+</vector>
