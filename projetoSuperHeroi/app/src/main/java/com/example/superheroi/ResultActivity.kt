@@ -88,7 +88,7 @@ class ResultActivity : AppCompatActivity() {
     
     private fun openGitHub() {
         // Intent implícita para abrir link do GitHub
-        val githubUrl = "https://github.com/Arthur-jpg"
+        val githubUrl = "https://github.com/Arthur-jpg/dev-mobile-2025.2/tree/main/projetoSuperHeroi"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubUrl))
         startActivity(intent)
     }
