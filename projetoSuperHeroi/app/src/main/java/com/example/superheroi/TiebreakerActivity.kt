@@ -4,152 +4,129 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.card.MaterialCardView
 
 class TiebreakerActivity : AppCompatActivity() {
-    
-    private lateinit var heroesLinearLayout: LinearLayout
-    private var tiedHeroIds: List<String> = emptyList()
-    
-    private data class Hero(
-        val id: String,
-        val nameRes: Int,
-        val descRes: Int,
-        val imageRes: Int
-    )
-    
-    private val heroes = mapOf(
-        "ironman" to Hero("ironman", R.string.hero_ironman, R.string.hero_ironman_desc, R.drawable.hero_ironman),
-        "hulk" to Hero("hulk", R.string.hero_hulk, R.string.hero_hulk_desc, R.drawable.hero_hulk),
-        "captain" to Hero("captain", R.string.hero_captainamerica, R.string.hero_captainamerica_desc, R.drawable.hero_captain),
-        "strange" to Hero("strange", R.string.hero_doctorstrange, R.string.hero_doctorstrange_desc, R.drawable.hero_strange),
-        "thor" to Hero("thor", R.string.hero_thor, R.string.hero_thor_desc, R.drawable.hero_thor),
-        "blackwidow" to Hero("blackwidow", R.string.hero_blackwidow, R.string.hero_blackwidow_desc, R.drawable.hero_blackwidow),
-        "spiderman" to Hero("spiderman", R.string.hero_spiderman, R.string.hero_spiderman_desc, R.drawable.hero_spiderman)
-    )
-    
-    companion object {
-        private const val TAG = "TiebreakerActivity"
-    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tiebreaker)
         
-        heroesLinearLayout = findViewById(R.id.heroesLinearLayout)
+        val heroesLinearLayout = findViewById<LinearLayout>(R.id.heroesLinearLayout)
+
+        val tiedHeroIds = intent.getStringArrayListExtra("TIED_HERO_IDS")
         
-        // Get tied hero IDs from intent
-        tiedHeroIds = intent.getStringArrayListExtra("TIED_HERO_IDS")?.toList() ?: emptyList()
+        Log.d("TiebreakerActivity", "Tela de desempate com heróis: $tiedHeroIds")
         
-        Log.d(TAG, "Tiebreaker screen opened with heroes: $tiedHeroIds")
-        
-        if (tiedHeroIds.isEmpty()) {
-            // Fallback: go directly to result with ironman
-            goToResult("ironman")
+        if (tiedHeroIds == null || tiedHeroIds.isEmpty()) {
+            val intent = Intent(this, ResultActivity::class.java)
+            intent.putExtra("HERO_ID", "ironman")
+            startActivity(intent)
+            finish()
             return
         }
-        
-        // Create a card for each tied hero
-        tiedHeroIds.forEach { heroId ->
-            val hero = heroes[heroId]
-            if (hero != null) {
-                addHeroCard(hero)
+
+        for (heroId in tiedHeroIds) {
+            val cardLayout = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+                setPadding(40, 40, 40, 40)
+                setBackgroundResource(android.R.color.white)
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    bottomMargin = 40
+                }
             }
-        }
-    }
-    
-    private fun addHeroCard(hero: Hero) {
-        // Create MaterialCardView
-        val card = MaterialCardView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                bottomMargin = 24
+
+            val heroImage = ImageView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(300, 300)
+                scaleType = ImageView.ScaleType.FIT_CENTER
             }
-            radius = 16f
-            cardElevation = 8f
-            setContentPadding(24, 24, 24, 24)
-        }
-        
-        // Create LinearLayout inside card
-        val cardContent = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
-        }
-        
-        // Hero Image
-        val imageView = ImageView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(200, 200)
-            setImageResource(hero.imageRes)
-            scaleType = ImageView.ScaleType.FIT_CENTER
-        }
-        
-        // Hero Name
-        val nameTextView = TextView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                topMargin = 16
+
+            val heroName = TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    topMargin = 24
+                }
+                textSize = 24f
+                gravity = Gravity.CENTER
+                setTypeface(null, android.graphics.Typeface.BOLD)
             }
-            text = getString(hero.nameRes)
-            textSize = 24f
-            setTextColor(getColor(R.color.accent))
-            gravity = Gravity.CENTER
-            setTypeface(null, android.graphics.Typeface.BOLD)
-        }
-        
-        // Hero Description
-        val descTextView = TextView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                topMargin = 16
+
+            val heroDesc = TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    topMargin = 16
+                }
+                textSize = 14f
+                gravity = Gravity.CENTER
             }
-            text = getString(hero.descRes)
-            textSize = 14f
-            setTextColor(getColor(R.color.text_primary))
-            gravity = Gravity.CENTER
-        }
-        
-        // Choose Button
-        val chooseButton = MaterialButton(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                topMargin = 24
+
+            val chooseButton = Button(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    topMargin = 32
+                }
+                text = "Escolher este herói"
+                textSize = 16f
             }
-            text = getString(R.string.choose_hero)
-            textSize = 16f
-            isAllCaps = false
-            setOnClickListener {
-                Log.d(TAG, "User selected hero: ${hero.id}")
-                goToResult(hero.id)
+
+            if (heroId == "ironman") {
+                heroImage.setImageResource(R.drawable.hero_ironman)
+                heroName.text = "Homem de Ferro"
+                heroDesc.text = "Você é inovador, inteligente e estratégico."
+            } else if (heroId == "hulk") {
+                heroImage.setImageResource(R.drawable.hero_hulk)
+                heroName.text = "Hulk"
+                heroDesc.text = "Você é forte, poderoso e determinado."
+            } else if (heroId == "captain") {
+                heroImage.setImageResource(R.drawable.hero_captain)
+                heroName.text = "Capitão América"
+                heroDesc.text = "Você é leal, corajoso e um líder nato."
+            } else if (heroId == "strange") {
+                heroImage.setImageResource(R.drawable.hero_strange)
+                heroName.text = "Doutor Estranho"
+                heroDesc.text = "Você é sábio, místico e sempre busca conhecimento."
+            } else if (heroId == "thor") {
+                heroImage.setImageResource(R.drawable.hero_thor)
+                heroName.text = "Thor"
+                heroDesc.text = "Você é nobre, corajoso e poderoso."
+            } else if (heroId == "blackwidow") {
+                heroImage.setImageResource(R.drawable.hero_blackwidow)
+                heroName.text = "Viúva Negra"
+                heroDesc.text = "Você é estratégica, ágil e sempre está um passo à frente."
+            } else if (heroId == "spiderman") {
+                heroImage.setImageResource(R.drawable.hero_spiderman)
+                heroName.text = "Homem-Aranha"
+                heroDesc.text = "Você é jovem, ágil e sempre ajuda o próximo."
             }
+
+            chooseButton.setOnClickListener {
+                Log.d("TiebreakerActivity", "Usuário escolheu: $heroId")
+                val intent = Intent(this, ResultActivity::class.java)
+                intent.putExtra("HERO_ID", heroId)
+                startActivity(intent)
+                finish()
+            }
+
+            cardLayout.addView(heroImage)
+            cardLayout.addView(heroName)
+            cardLayout.addView(heroDesc)
+            cardLayout.addView(chooseButton)
+
+            heroesLinearLayout.addView(cardLayout)
         }
-        
-        // Add views to card
-        cardContent.addView(imageView)
-        cardContent.addView(nameTextView)
-        cardContent.addView(descTextView)
-        cardContent.addView(chooseButton)
-        
-        card.addView(cardContent)
-        heroesLinearLayout.addView(card)
-    }
-    
-    private fun goToResult(heroId: String) {
-        val intent = Intent(this, ResultActivity::class.java)
-        intent.putExtra("HERO_ID", heroId)
-        startActivity(intent)
-        finish()
     }
 }

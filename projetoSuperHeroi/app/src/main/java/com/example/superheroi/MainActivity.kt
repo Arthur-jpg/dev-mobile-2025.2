@@ -2,57 +2,43 @@ package com.example.superheroi
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
 
 class MainActivity : AppCompatActivity() {
-    
-    private lateinit var nameEditText: TextInputEditText
-    private lateinit var termsCheckBox: CheckBox
-    private lateinit var startQuizButton: MaterialButton
-    private lateinit var logoImageView: ImageView
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
-        // Initialize views
-        nameEditText = findViewById(R.id.nameEditText)
-        termsCheckBox = findViewById(R.id.termsCheckBox)
-        startQuizButton = findViewById(R.id.startQuizButton)
-        logoImageView = findViewById(R.id.logoImageView)
-        
-        // Set logo
+
+        val nameEditText = findViewById<EditText>(R.id.nameEditText)
+        val termsCheckBox = findViewById<CheckBox>(R.id.termsCheckBox)
+        val startQuizButton = findViewById<Button>(R.id.startQuizButton)
+        val logoImageView = findViewById<ImageView>(R.id.logoImageView)
+
         logoImageView.setImageResource(R.drawable.logo_heroes)
-        
-        // Set button click listener
+
         startQuizButton.setOnClickListener {
-            startQuiz()
+            val name = nameEditText.text.toString().trim()
+
+            if (name.isEmpty()) {
+                Toast.makeText(this, "Por favor, insira seu nome!", Toast.LENGTH_SHORT).show()
+                nameEditText.requestFocus()
+                return@setOnClickListener
+            }
+            
+            if (!termsCheckBox.isChecked) {
+                Toast.makeText(this, "Você precisa aceitar os termos!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val intent = Intent(this, QuizActivity::class.java)
+            intent.putExtra("USER_NAME", name)
+            startActivity(intent)
         }
-    }
-    
-    private fun startQuiz() {
-        val name = nameEditText.text.toString().trim()
-        
-        // Validation
-        if (name.isEmpty()) {
-            Toast.makeText(this, R.string.name_required, Toast.LENGTH_SHORT).show()
-            nameEditText.requestFocus()
-            return
-        }
-        
-        if (!termsCheckBox.isChecked) {
-            Toast.makeText(this, R.string.terms_required, Toast.LENGTH_SHORT).show()
-            return
-        }
-        
-        // Start Quiz Activity with user name
-        val intent = Intent(this, QuizActivity::class.java)
-        intent.putExtra("USER_NAME", name)
-        startActivity(intent)
     }
 }

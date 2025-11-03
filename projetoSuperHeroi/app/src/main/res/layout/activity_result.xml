@@ -1,125 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/background"
+    android:background="#F5F5F5"
     tools:context=".ResultActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp">
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
         <!-- Result Title -->
         <TextView
             android:id="@+id/resultTitleTextView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:gravity="center"
-            android:text="@string/result_title"
-            android:textColor="@color/primary"
+            android:text="Seu Herói é..."
+            android:textColor="#1976D2"
             android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textStyle="bold" />
 
-        <!-- Result Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/resultCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <!-- Hero Image -->
+        <ImageView
+            android:id="@+id/heroImageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_marginTop="24dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/resultTitleTextView">
+            android:contentDescription="Imagem do herói"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/ic_launcher_foreground" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp"
-                android:gravity="center">
+        <!-- Hero Name -->
+        <TextView
+            android:id="@+id/heroNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:textColor="#FF9800"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            tools:text="Homem de Ferro" />
 
-                <!-- Hero Image -->
-                <ImageView
-                    android:id="@+id/heroImageView"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:contentDescription="@string/result_title"
-                    android:scaleType="centerCrop"
-                    tools:src="@drawable/ic_launcher_foreground" />
-
-                <!-- Hero Name -->
-                <TextView
-                    android:id="@+id/heroNameTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"
-                    android:textColor="@color/accent"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    tools:text="@string/hero_ironman" />
-
-                <!-- Hero Description -->
-                <TextView
-                    android:id="@+id/heroDescriptionTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center"
-                    android:lineSpacingExtra="4dp"
-                    android:textColor="@color/text_primary"
-                    android:textSize="16sp"
-                    tools:text="@string/hero_ironman_desc" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        <!-- Hero Description -->
+        <TextView
+            android:id="@+id/heroDescriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:textColor="#333333"
+            android:textSize="16sp"
+            android:padding="16dp"
+            android:background="#FFFFFF"
+            tools:text="Você é inovador e inteligente" />
 
         <!-- Share Button -->
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/shareButton"
-            style="@style/QuizButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@string/share_result"
-            android:textAllCaps="false"
-            app:icon="@android:drawable/ic_menu_share"
-            app:iconGravity="textStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/resultCard" />
+            android:text="Compartilhar Resultado"
+            android:textSize="16sp"
+            android:padding="16dp" />
 
         <!-- GitHub Button -->
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/githubButton"
-            style="@style/QuizButtonOutlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="@string/view_github"
-            android:textAllCaps="false"
-            app:icon="@android:drawable/ic_menu_info_details"
-            app:iconGravity="textStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/shareButton" />
+            android:text="Ver no GitHub"
+            android:textSize="16sp"
+            android:padding="16dp" />
 
         <!-- Restart Button -->
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/restartButton"
-            style="@style/QuizButtonOutlined"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="@string/restart_quiz"
-            android:textAllCaps="false"
-            app:icon="@android:drawable/ic_menu_rotate"
-            app:iconGravity="textStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/githubButton" />
+            android:text="Reiniciar Quiz"
+            android:textSize="16sp"
+            android:padding="16dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </ScrollView>

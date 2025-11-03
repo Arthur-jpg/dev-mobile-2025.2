@@ -3,106 +3,79 @@ package com.example.superheroi
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.button.MaterialButton
 
 class ResultActivity : AppCompatActivity() {
-    
-    private lateinit var heroImageView: ImageView
-    private lateinit var heroNameTextView: TextView
-    private lateinit var heroDescriptionTextView: TextView
-    private lateinit var shareButton: MaterialButton
-    private lateinit var githubButton: MaterialButton
-    private lateinit var restartButton: MaterialButton
-    
-    private data class Hero(
-        val id: String,
-        val nameRes: Int,
-        val descRes: Int,
-        val imageRes: Int
-    )
-    
-    private val heroes = mapOf(
-        "ironman" to Hero("ironman", R.string.hero_ironman, R.string.hero_ironman_desc, R.drawable.hero_ironman),
-        "hulk" to Hero("hulk", R.string.hero_hulk, R.string.hero_hulk_desc, R.drawable.hero_hulk),
-        "captain" to Hero("captain", R.string.hero_captainamerica, R.string.hero_captainamerica_desc, R.drawable.hero_captain),
-        "strange" to Hero("strange", R.string.hero_doctorstrange, R.string.hero_doctorstrange_desc, R.drawable.hero_strange),
-        "thor" to Hero("thor", R.string.hero_thor, R.string.hero_thor_desc, R.drawable.hero_thor),
-        "blackwidow" to Hero("blackwidow", R.string.hero_blackwidow, R.string.hero_blackwidow_desc, R.drawable.hero_blackwidow),
-        "spiderman" to Hero("spiderman", R.string.hero_spiderman, R.string.hero_spiderman_desc, R.drawable.hero_spiderman)
-    )
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
-        
-        // Initialize views
-        heroImageView = findViewById(R.id.heroImageView)
-        heroNameTextView = findViewById(R.id.heroNameTextView)
-        heroDescriptionTextView = findViewById(R.id.heroDescriptionTextView)
-        shareButton = findViewById(R.id.shareButton)
-        githubButton = findViewById(R.id.githubButton)
-        restartButton = findViewById(R.id.restartButton)
-        
-        // Get hero ID from intent
-        val heroId = intent.getStringExtra("HERO_ID") ?: "ironman"
-        val hero = heroes[heroId] ?: heroes["ironman"]!!
-        
-        // Display hero information
-        displayHero(hero)
-        
-        // Set button click listeners
+
+        val heroImageView = findViewById<ImageView>(R.id.heroImageView)
+        val heroNameTextView = findViewById<TextView>(R.id.heroNameTextView)
+        val heroDescriptionTextView = findViewById<TextView>(R.id.heroDescriptionTextView)
+        val shareButton = findViewById<Button>(R.id.shareButton)
+        val githubButton = findViewById<Button>(R.id.githubButton)
+        val restartButton = findViewById<Button>(R.id.restartButton)
+
+        val heroId = intent.getStringExtra("HERO_ID")
+
+        if (heroId == "ironman") {
+            heroImageView.setImageResource(R.drawable.hero_ironman)
+            heroNameTextView.text = "Homem de Ferro"
+            heroDescriptionTextView.text = "Você é inovador, inteligente e estratégico. Sempre busca soluções tecnológicas e lidera com confiança."
+        } else if (heroId == "hulk") {
+            heroImageView.setImageResource(R.drawable.hero_hulk)
+            heroNameTextView.text = "Hulk"
+            heroDescriptionTextView.text = "Você é forte, poderoso e determinado. Quando necessário, você mostra toda sua força interior."
+        } else if (heroId == "captain") {
+            heroImageView.setImageResource(R.drawable.hero_captain)
+            heroNameTextView.text = "Capitão América"
+            heroDescriptionTextView.text = "Você é leal, corajoso e um líder nato. Sempre defende o que é certo e inspira os outros."
+        } else if (heroId == "strange") {
+            heroImageView.setImageResource(R.drawable.hero_strange)
+            heroNameTextView.text = "Doutor Estranho"
+            heroDescriptionTextView.text = "Você é sábio, místico e sempre busca conhecimento. Usa sua inteligência para proteger os outros."
+        } else if (heroId == "thor") {
+            heroImageView.setImageResource(R.drawable.hero_thor)
+            heroNameTextView.text = "Thor"
+            heroDescriptionTextView.text = "Você é nobre, corajoso e poderoso. Enfrenta qualquer desafio com bravura e honra."
+        } else if (heroId == "blackwidow") {
+            heroImageView.setImageResource(R.drawable.hero_blackwidow)
+            heroNameTextView.text = "Viúva Negra"
+            heroDescriptionTextView.text = "Você é estratégica, ágil e sempre está um passo à frente. Suas habilidades são incomparáveis."
+        } else if (heroId == "spiderman") {
+            heroImageView.setImageResource(R.drawable.hero_spiderman)
+            heroNameTextView.text = "Homem-Aranha"
+            heroDescriptionTextView.text = "Você é jovem, ágil e sempre ajuda o próximo. Usa seus poderes para proteger sua comunidade."
+        }
+
         shareButton.setOnClickListener {
-            shareResult(hero)
+            val heroName = heroNameTextView.text.toString()
+            val shareText = "Eu fiz o quiz de super-heróis e meu resultado foi: $heroName! Faça você também!"
+            
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Quiz Super Herói")
+            intent.putExtra(Intent.EXTRA_TEXT, shareText)
+            
+            startActivity(Intent.createChooser(intent, "Compartilhar via"))
         }
-        
+
         githubButton.setOnClickListener {
-            openGitHub()
+            val githubUrl = "https://github.com/Arthur-jpg/dev-mobile-2025.2/tree/main/projetoSuperHeroi"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubUrl))
+            startActivity(intent)
         }
-        
+
         restartButton.setOnClickListener {
-            restartQuiz()
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
         }
-    }
-    
-    private fun displayHero(hero: Hero) {
-        heroImageView.setImageResource(hero.imageRes)
-        heroNameTextView.text = getString(hero.nameRes)
-        heroDescriptionTextView.text = getString(hero.descRes)
-    }
-    
-    private fun shareResult(hero: Hero) {
-        // Intent implícita para compartilhar resultado
-        val heroName = getString(hero.nameRes)
-        val shareText = getString(R.string.share_text, heroName)
-        
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
-        intent.putExtra(Intent.EXTRA_TEXT, shareText)
-        
-        startActivity(Intent.createChooser(intent, getString(R.string.share_via)))
-    }
-    
-    private fun openGitHub() {
-        // Intent implícita para abrir link do GitHub
-        val githubUrl = "https://github.com/Arthur-jpg/dev-mobile-2025.2/tree/main/projetoSuperHeroi"
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubUrl))
-        startActivity(intent)
-    }
-    
-    private fun restartQuiz() {
-        // Return to MainActivity
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-        finish()
-    }
-    
-    override fun onBackPressed() {
-        // Override back button to return to main activity
-        restartQuiz()
     }
 }
