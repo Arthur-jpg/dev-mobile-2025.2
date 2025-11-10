@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">SplitEasy</string>
+    <string name="onboarding_title">Organize viagens em grupo</string>
+    <string name="onboarding_subtitle">Cadastre o nome da aventura e convide o pessoal para dividir cada gasto.</string>
+    <string name="onboarding_trip_name_hint">Nome da viagem</string>
+    <string name="onboarding_button">Começar</string>
+    <string name="participants_title">Quem vai na viagem?</string>
+    <string name="participants_hint">Nome do participante</string>
+    <string name="participants_add">Adicionar</string>
+    <string name="participants_next">Ir para as despesas</string>
+    <string name="empty_participants">Sem pessoas ainda. Adicione ao menos duas.</string>
+    <string name="expenses_title">Despesas</string>
+    <string name="expenses_empty">Nenhuma despesa cadastrada.\nClique no botão para adicionar.</string>
+    <string name="add_expense_title">Nome da despesa</string>
+    <string name="add_expense_amount_hint">Valor total</string>
+    <string name="add_expense_currency">Moeda</string>
+    <string name="add_expense_payer">Quem pagou?</string>
+    <string name="add_expense_shared">Quem participa da divisão?</string>
+    <string name="add_personal_charge">Adicionar ajuste individual</string>
+    <string name="personal_charge_empty">Sem ajustes individuais</string>
+    <string name="save_expense">Salvar despesa</string>
+    <string name="settlement_title">Fechamento</string>
+    <string name="settlement_total">Total gasto</string>
+    <string name="settlement_per_person">Por pessoa</string>
+    <string name="settlement_balances">Saldos</string>
+    <string name="settlement_transfers">Acertos sugeridos</string>
+    <string name="share_summary">Compartilhar resumo</string>
+    <string name="no_transfers">Tudo certo! Ninguém deve nada.</string>
+    <string name="delete">Remover</string>
+    <string name="currency_display">Moeda de exibição: %1$s</string>
+</resources>

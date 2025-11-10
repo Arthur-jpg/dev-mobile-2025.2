@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/background"
+    tools:context=".QuizActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <!-- Quiz Title -->
+        <TextView
+            android:id="@+id/quizTitleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/quiz_title"
+            android:textColor="@color/primary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- User Name Display -->
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp"
+            tools:text="Olá, Arthur!"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/quizTitleTextView" />
+
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+            android:layout_marginTop="24dp"
+            android:max="3"
+            android:progress="1"
+            android:progressTint="@color/accent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userNameTextView" />
+
+        <!-- Progress Text -->
+        <TextView
+            android:id="@+id/progressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            tools:text="Pergunta 1 de 3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progressBar" />
+
+        <!-- Question Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/questionCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progressTextView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <!-- Question Text -->
+                <TextView
+                    android:id="@+id/questionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="@string/question_1" />
+
+                <!-- RadioGroup for options -->
+                <RadioGroup
+                    android:id="@+id/answersRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/option1RadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp"
+                        android:textSize="16sp"
+                        tools:text="@string/q1_option1" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/option2RadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp"
+                        android:textSize="16sp"
+                        tools:text="@string/q1_option2" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/option3RadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp"
+                        android:textSize="16sp"
+                        tools:text="@string/q1_option3" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/option4RadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp"
+                        android:textSize="16sp"
+                        tools:text="@string/q1_option4" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/option5RadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        tools:text="@string/q3_option5" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/option6RadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        tools:text="@string/q3_option6" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/option7RadioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="12dp"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        tools:text="@string/q3_option7" />
+                </RadioGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Next/Result Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/nextButton"
+            style="@style/QuizButton"
+            android:layout_marginTop="24dp"
+            android:text="@string/next_question"
+            android:textAllCaps="false"
+            app:icon="@android:drawable/ic_media_next"
+            app:iconGravity="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/questionCard" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
