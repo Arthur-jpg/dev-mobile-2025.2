@@ -3,39 +3,57 @@ package com.example.ap2
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.core.view.isVisible
 import com.example.ap2.data.TripRepository
-import com.example.ap2.databinding.ActivitySettlementBinding
 import com.example.ap2.domain.ExpenseCalculator
+import com.example.ap2.extensions.onItemSelected
 import com.example.ap2.model.Currency
 import com.example.ap2.model.Money
 import com.example.ap2.model.Transfer
 import com.example.ap2.ui.settlement.TransferAdapter
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
 
 class SettlementActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySettlementBinding
-    private lateinit var adapter: TransferAdapter
+    private val toolbar: MaterialToolbar
+        get() = findViewById(R.id.toolbar)
+    private val currencySpinner: Spinner
+        get() = findViewById(R.id.currencySpinner)
+    private val totalValue: TextView
+        get() = findViewById(R.id.totalValue)
+    private val perPersonValue: TextView
+        get() = findViewById(R.id.perPersonValue)
+    private val balanceSummary: TextView
+        get() = findViewById(R.id.balanceSummary)
+    private val transfersList: RecyclerView
+        get() = findViewById(R.id.transfersList)
+    private val noTransfersText: TextView
+        get() = findViewById(R.id.noTransfersText)
+    private val shareButton: MaterialButton
+        get() = findViewById(R.id.shareButton)
+    private val adapter = TransferAdapter(mutableListOf())
     private var transfers: List<Transfer> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySettlementBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_settlement)
 
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Fechamento"
 
-        adapter = TransferAdapter(mutableListOf())
-        binding.transfersList.layoutManager = LinearLayoutManager(this)
-        binding.transfersList.adapter = adapter
+        transfersList.layoutManager = LinearLayoutManager(this)
+        transfersList.adapter = adapter
 
         setupCurrencySpinner()
-        binding.shareButton.setOnClickListener { shareSummary() }
+        shareButton.setOnClickListener { shareSummary() }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -54,10 +72,10 @@ class SettlementActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             Currency.values().toList()
         )
-        binding.currencySpinner.adapter = currencyAdapter
+        currencySpinner.adapter = currencyAdapter
         val currentIndex = Currency.values().indexOf(TripRepository.displayCurrency)
-        binding.currencySpinner.setSelection(currentIndex)
-        binding.currencySpinner.setOnItemSelectedListener<Currency> { currency ->
+        currencySpinner.setSelection(currentIndex)
+        currencySpinner.onItemSelected<Currency> { currency ->
             TripRepository.updateDisplayCurrency(currency)
             adapter.displayCurrency = currency
             refreshSummary()
@@ -76,9 +94,9 @@ class SettlementActivity : AppCompatActivity() {
         val currency = TripRepository.displayCurrency
 
         val totalMoney = Money(summary.totalSpent, Currency.BRL).convertTo(currency)
-        binding.totalValue.text = totalMoney.format()
+        totalValue.text = totalMoney.format()
         val perPerson = if (participants.isEmpty()) 0.0 else summary.totalSpent / participants.size
-        binding.perPersonValue.text = Money(perPerson, Currency.BRL).convertTo(currency).format()
+        perPersonValue.text = Money(perPerson, Currency.BRL).convertTo(currency).format()
 
         val balanceLines = summary.balances.entries.joinToString("\n") { (participant, balance) ->
             when {
@@ -87,12 +105,12 @@ class SettlementActivity : AppCompatActivity() {
                 else -> "${participant.name} está equilibrado"
             }
         }
-        binding.balanceSummary.text = balanceLines
+        balanceSummary.text = balanceLines
 
         transfers = summary.transfers
         adapter.replace(transfers)
         adapter.displayCurrency = currency
-        binding.noTransfersText.isVisible = transfers.isEmpty()
+        noTransfersText.isVisible = transfers.isEmpty()
     }
 
     private fun shareSummary() {
@@ -117,19 +135,4 @@ class SettlementActivity : AppCompatActivity() {
         startActivity(Intent.createChooser(intent, "Compartilhar resumo"))
     }
 
-    private fun <T> android.widget.Spinner.setOnItemSelectedListener(block: (T) -> Unit) {
-        onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: android.widget.AdapterView<*>?,
-                view: android.view.View?,
-                position: Int,
-                id: Long
-            ) {
-                @Suppress("UNCHECKED_CAST")
-                block(selectedItem as T)
-            }
-
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) = Unit
-        }
-    }
 }

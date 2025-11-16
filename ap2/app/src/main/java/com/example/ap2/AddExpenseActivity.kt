@@ -3,15 +3,15 @@ package com.example.ap2
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ap2.R
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ap2.data.TripRepository
-import com.example.ap2.databinding.ActivityAddExpenseBinding
-import com.example.ap2.databinding.DialogPersonalChargeBinding
 import com.example.ap2.model.Currency
 import com.example.ap2.model.CurrencyConverter
 import com.example.ap2.model.Expense
@@ -19,7 +19,11 @@ import com.example.ap2.model.Money
 import com.example.ap2.model.Participant
 import com.example.ap2.model.PersonalCharge
 import com.example.ap2.ui.expenses.PersonalChargeAdapter
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.textfield.TextInputEditText
 import java.util.UUID
 
 class AddExpenseActivity : AppCompatActivity() {
@@ -28,16 +32,35 @@ class AddExpenseActivity : AppCompatActivity() {
         const val EXTRA_EXPENSE_ID = "expense_id"
     }
 
-    private lateinit var binding: ActivityAddExpenseBinding
+    private val toolbar: MaterialToolbar
+        get() = findViewById(R.id.toolbar)
+    private val titleInput: TextInputEditText
+        get() = findViewById(R.id.titleInput)
+    private val amountInput: TextInputEditText
+        get() = findViewById(R.id.amountInput)
+    private val currencySpinner: Spinner
+        get() = findViewById(R.id.currencySpinner)
+    private val payerSpinner: Spinner
+        get() = findViewById(R.id.payerSpinner)
+    private val sharedParticipantsGroup: ChipGroup
+        get() = findViewById(R.id.sharedParticipantsGroup)
+    private val emptyPersonalCharges: TextView
+        get() = findViewById(R.id.emptyPersonalCharges)
+    private val personalChargesList: RecyclerView
+        get() = findViewById(R.id.personalChargesList)
+    private val addPersonalChargeButton: MaterialButton
+        get() = findViewById(R.id.addPersonalChargeButton)
+    private val saveExpenseButton: MaterialButton
+        get() = findViewById(R.id.saveExpenseButton)
+
     private val personalCharges = mutableListOf<PersonalCharge>()
-    private lateinit var personalChargeAdapter: PersonalChargeAdapter
-    private lateinit var participants: List<Participant>
+    private var personalChargeAdapter: PersonalChargeAdapter? = null
+    private var participants: List<Participant> = emptyList()
     private var editingExpenseId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAddExpenseBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_add_expense)
 
         participants = TripRepository.getParticipants()
         if (participants.isEmpty()) {
@@ -59,14 +82,14 @@ class AddExpenseActivity : AppCompatActivity() {
         setupParticipantsChips()
         setupPersonalChargesList()
 
-        binding.addPersonalChargeButton.setOnClickListener { showPersonalChargeDialog() }
-        binding.saveExpenseButton.setOnClickListener { saveExpense() }
+        addPersonalChargeButton.setOnClickListener { showPersonalChargeDialog() }
+        saveExpenseButton.setOnClickListener { saveExpense() }
 
         expenseToEdit?.let { populateExpense(it) }
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val titleRes = if (editingExpenseId == null) {
             R.string.add_expense_new_title
@@ -87,90 +110,95 @@ class AddExpenseActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             Currency.values().toList()
         )
-        binding.currencySpinner.adapter = currencyAdapter
+        currencySpinner.adapter = currencyAdapter
         val payerAdapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
             participants.map { it.name }
         )
-        binding.payerSpinner.adapter = payerAdapter
+        payerSpinner.adapter = payerAdapter
     }
 
     private fun setupParticipantsChips() {
-        binding.sharedParticipantsGroup.removeAllViews()
+        sharedParticipantsGroup.removeAllViews()
         participants.forEach { participant ->
-            val chip = com.google.android.material.chip.Chip(this).apply {
+            val chip = Chip(this).apply {
                 text = participant.name
                 isCheckable = true
                 isChecked = true
                 tag = participant.id
                 id = View.generateViewId()
             }
-            binding.sharedParticipantsGroup.addView(chip)
+            sharedParticipantsGroup.addView(chip)
         }
     }
 
     private fun setupPersonalChargesList() {
         personalChargeAdapter = PersonalChargeAdapter(personalCharges) { charge ->
             personalCharges.remove(charge)
-            personalChargeAdapter.refresh()
+            personalChargeAdapter?.refresh()
             togglePersonalChargesBlock()
         }
-        binding.personalChargesList.layoutManager = LinearLayoutManager(this)
-        binding.personalChargesList.adapter = personalChargeAdapter
+        personalChargesList.layoutManager = LinearLayoutManager(this)
+        personalChargesList.adapter = personalChargeAdapter
         togglePersonalChargesBlock()
     }
 
     private fun togglePersonalChargesBlock() {
-        binding.personalChargesList.isVisible = personalCharges.isNotEmpty()
-        binding.emptyPersonalCharges.isVisible = personalCharges.isEmpty()
+        personalChargesList.isVisible = personalCharges.isNotEmpty()
+        emptyPersonalCharges.isVisible = personalCharges.isEmpty()
     }
 
     private fun populateExpense(expense: Expense) {
-        binding.titleInput.setText(expense.title)
-        binding.amountInput.setText(expense.total.amount.toString())
+        titleInput.setText(expense.title)
+        amountInput.setText(expense.total.amount.toString())
         val currencyIndex = Currency.values().indexOf(expense.total.currency)
         if (currencyIndex >= 0) {
-            binding.currencySpinner.setSelection(currencyIndex)
+            currencySpinner.setSelection(currencyIndex)
         }
         val payerIndex = participants.indexOfFirst { it.id == expense.payerId }
         if (payerIndex >= 0) {
-            binding.payerSpinner.setSelection(payerIndex)
+            payerSpinner.setSelection(payerIndex)
         }
         setChipSelections(expense.sharedParticipantIds.toSet())
         personalCharges.clear()
         personalCharges.addAll(expense.personalCharges.map { it.copy() })
-        personalChargeAdapter.refresh()
+        personalChargeAdapter?.refresh()
         togglePersonalChargesBlock()
     }
 
     private fun setChipSelections(selectedIds: Set<String>) {
-        for (index in 0 until binding.sharedParticipantsGroup.childCount) {
-            val chip = binding.sharedParticipantsGroup.getChildAt(index) as? Chip ?: continue
+        for (index in 0 until sharedParticipantsGroup.childCount) {
+            val chip = sharedParticipantsGroup.getChildAt(index) as? Chip ?: continue
             val participantId = chip.tag as? String
             chip.isChecked = participantId != null && selectedIds.contains(participantId)
         }
     }
 
     private fun showPersonalChargeDialog() {
-        val dialogBinding = DialogPersonalChargeBinding.inflate(layoutInflater)
-        dialogBinding.participantSpinner.adapter = ArrayAdapter(
+        val dialogView = layoutInflater.inflate(R.layout.dialog_personal_charge, null)
+        val participantSpinner: Spinner = dialogView.findViewById(R.id.participantSpinner)
+        val amountInputField: TextInputEditText = dialogView.findViewById(R.id.amountInput)
+        val noteInputField: TextInputEditText = dialogView.findViewById(R.id.noteInput)
+
+        participantSpinner.adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
             participants.map { it.name }
         )
+
         AlertDialog.Builder(this)
             .setTitle("Adicionar ajuste individual")
-            .setView(dialogBinding.root)
+            .setView(dialogView)
             .setPositiveButton("Adicionar") { _, _ ->
-                val amount = dialogBinding.amountInput.text?.toString()?.toDoubleOrNull()
+                val amount = amountInputField.text?.toString()?.toDoubleOrNull()
                 if (amount == null || amount <= 0) {
                     Toast.makeText(this, "Valor inválido", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
-                val participant = participants[dialogBinding.participantSpinner.selectedItemPosition]
-                val note = dialogBinding.noteInput.text?.toString().orEmpty()
-                val currency = binding.currencySpinner.selectedItem as Currency
+                val participant = participants[participantSpinner.selectedItemPosition]
+                val note = noteInputField.text?.toString().orEmpty()
+                val currency = currencySpinner.selectedItem as Currency
                 personalCharges.add(
                     PersonalCharge(
                         id = UUID.randomUUID().toString(),
@@ -179,30 +207,30 @@ class AddExpenseActivity : AppCompatActivity() {
                         note = note.ifBlank { null }
                     )
                 )
-                personalChargeAdapter.refresh()
-                togglePersonalChargesBlock()
+        personalChargeAdapter?.refresh()
+        togglePersonalChargesBlock()
             }
             .setNegativeButton("Cancelar", null)
             .show()
     }
 
     private fun saveExpense() {
-        val title = binding.titleInput.text?.toString().orEmpty()
-        val amount = binding.amountInput.text?.toString()?.toDoubleOrNull()
+        val title = titleInput.text?.toString().orEmpty()
+        val amount = amountInput.text?.toString()?.toDoubleOrNull()
         if (amount == null || amount <= 0) {
             Toast.makeText(this, "Informe um valor válido", Toast.LENGTH_SHORT).show()
             return
         }
-        val currency = binding.currencySpinner.selectedItem as Currency
+        val currency = currencySpinner.selectedItem as Currency
         val money = Money(amount, currency)
-        val payer = participants.getOrNull(binding.payerSpinner.selectedItemPosition)
+        val payer = participants.getOrNull(payerSpinner.selectedItemPosition)
         if (payer == null) {
             Toast.makeText(this, "Selecione quem pagou", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val selectedParticipants = binding.sharedParticipantsGroup.checkedChipIds.mapNotNull { id ->
-            val chip = binding.sharedParticipantsGroup.findViewById<com.google.android.material.chip.Chip>(id)
+        val selectedParticipants = sharedParticipantsGroup.checkedChipIds.mapNotNull { id ->
+            val chip = sharedParticipantsGroup.findViewById<Chip>(id)
             chip?.tag as? String
         }
 

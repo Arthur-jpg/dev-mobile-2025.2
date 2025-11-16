@@ -1,13 +1,15 @@
 package com.example.ap2.ui.expenses
 
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.ImageButton
+import android.widget.TextView
+import com.example.ap2.R
 import com.example.ap2.data.TripRepository
-import com.example.ap2.databinding.ItemExpenseBinding
 import com.example.ap2.model.Currency
 import com.example.ap2.model.CurrencyConverter
 import com.example.ap2.model.Expense
@@ -26,8 +28,8 @@ class ExpenseAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemExpenseBinding.inflate(inflater, parent, false)
-        return ExpenseViewHolder(binding, onEdit, onDelete)
+        val view = inflater.inflate(R.layout.item_expense, parent, false)
+        return ExpenseViewHolder(view, onEdit, onDelete)
     }
 
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
@@ -35,13 +37,21 @@ class ExpenseAdapter(
     }
 
     class ExpenseViewHolder(
-        private val binding: ItemExpenseBinding,
+        itemView: View,
         private val onEdit: (Expense) -> Unit,
         private val onDelete: (Expense) -> Unit
     ) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(itemView) {
 
-        fun bind(expense: Expense, currency: Currency) = with(binding) {
+        private val title: TextView = itemView.findViewById(R.id.title)
+        private val payer: TextView = itemView.findViewById(R.id.payer)
+        private val originalAmount: TextView = itemView.findViewById(R.id.originalAmount)
+        private val convertedAmount: TextView = itemView.findViewById(R.id.convertedAmount)
+        private val personalCharges: TextView = itemView.findViewById(R.id.personalCharges)
+        private val editButton: ImageButton = itemView.findViewById(R.id.editButton)
+        private val deleteButton: ImageButton = itemView.findViewById(R.id.deleteButton)
+
+        fun bind(expense: Expense, currency: Currency) {
             title.text = expense.title
             val payerName = TripRepository.getParticipants()
                 .find { it.id == expense.payerId }

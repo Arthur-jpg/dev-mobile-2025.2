@@ -18,6 +18,11 @@
     <string name="expense_delete">Excluir despesa</string>
     <string name="expense_delete_confirmation">Deseja remover esta despesa? Essa ação não pode ser desfeita.</string>
     <string name="expense_delete_title">Remover despesa</string>
+    <string name="overview_title">Visão geral</string>
+    <string name="overview_total_label">Total gasto na viagem</string>
+    <string name="overview_participants_label">Participantes cadastrados</string>
+    <string name="overview_participants_value">%1$d participantes</string>
+    <string name="overview_button">Ver visão geral</string>
     <string name="add_expense_title">Nome da despesa</string>
     <string name="add_expense_amount_hint">Valor total</string>
     <string name="add_expense_currency">Moeda</string>

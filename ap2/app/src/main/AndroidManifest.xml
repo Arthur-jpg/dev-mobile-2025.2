@@ -16,6 +16,9 @@
             android:name=".SettlementActivity"
             android:exported="false" />
         <activity
+            android:name=".OverviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddExpenseActivity"
             android:exported="false" />
         <activity

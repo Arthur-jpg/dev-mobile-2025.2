@@ -7,35 +7,48 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ap2.data.TripRepository
-import com.example.ap2.databinding.ActivityParticipantsBinding
 import com.example.ap2.ui.participants.ParticipantAdapter
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 
 class ParticipantsActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityParticipantsBinding
     private val adapter = ParticipantAdapter { participant ->
         TripRepository.removeParticipant(participant.id)
         refreshList()
     }
 
+    private val toolbar: MaterialToolbar
+        get() = findViewById(R.id.toolbar)
+    private val participantsList
+        get() = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.participantsList)
+    private val participantInput: TextInputEditText
+        get() = findViewById(R.id.participantInput)
+    private val addParticipantButton: MaterialButton
+        get() = findViewById(R.id.addParticipantButton)
+    private val goToExpensesButton: MaterialButton
+        get() = findViewById(R.id.goToExpensesButton)
+    private val emptyState
+        get() = findViewById<android.widget.TextView>(R.id.emptyState)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityParticipantsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_participants)
 
-        binding.toolbar.title = TripRepository.tripName
-        binding.participantsList.layoutManager = LinearLayoutManager(this)
-        binding.participantsList.adapter = adapter
+        toolbar.title = TripRepository.tripName
+        participantsList.layoutManager = LinearLayoutManager(this)
+        participantsList.adapter = adapter
 
-        binding.addParticipantButton.setOnClickListener {
-            val name = binding.participantInput.text?.toString().orEmpty()
+        addParticipantButton.setOnClickListener {
+            val name = participantInput.text?.toString().orEmpty()
             if (name.isBlank()) {
                 Toast.makeText(this, "Digite um nome antes de adicionar", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             runCatching { TripRepository.addParticipant(name) }
                 .onSuccess {
-                    binding.participantInput.text?.clear()
+                    participantInput.text?.clear()
                     refreshList()
                 }
                 .onFailure {
@@ -43,7 +56,7 @@ class ParticipantsActivity : AppCompatActivity() {
                 }
         }
 
-        binding.goToExpensesButton.setOnClickListener {
+        goToExpensesButton.setOnClickListener {
             if (TripRepository.getParticipants().size < 2) {
                 Toast.makeText(this, "Adicione pelo menos duas pessoas", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -60,7 +73,7 @@ class ParticipantsActivity : AppCompatActivity() {
     private fun refreshList() {
         val participants = TripRepository.getParticipants()
         adapter.submitList(participants)
-        binding.emptyState.isVisible = participants.isEmpty()
-        binding.goToExpensesButton.isEnabled = participants.size >= 2
+        emptyState.isVisible = participants.isEmpty()
+        goToExpensesButton.isEnabled = participants.size >= 2
     }
 }

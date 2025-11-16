@@ -5,39 +5,57 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentContainerView
 import com.example.ap2.data.TripRepository
-import com.example.ap2.databinding.ActivityExpensesBinding
 import com.example.ap2.ui.expenses.ExpensesListFragment
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class ExpensesActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityExpensesBinding
+    private val toolbar: MaterialToolbar
+        get() = findViewById(R.id.toolbar)
+    private val currencyInfo: TextView
+        get() = findViewById(R.id.currencyInfo)
+    private val viewSettlementButton: MaterialButton
+        get() = findViewById(R.id.viewSettlementButton)
+    private val addExpenseFab: ExtendedFloatingActionButton
+        get() = findViewById(R.id.addExpenseFab)
+    private val viewOverviewButton: MaterialButton
+        get() = findViewById(R.id.viewOverviewButton)
+    private val fragmentContainer: FragmentContainerView
+        get() = findViewById(R.id.fragmentContainer)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityExpensesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_expenses)
 
-        binding.toolbar.title = TripRepository.tripName
+        toolbar.title = TripRepository.tripName
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(binding.fragmentContainer.id, ExpensesListFragment())
+                .replace(fragmentContainer.id, ExpensesListFragment())
                 .commit()
         }
 
-        binding.addExpenseFab.setOnClickListener {
+        addExpenseFab.setOnClickListener {
             startActivity(Intent(this, AddExpenseActivity::class.java))
         }
 
-        binding.viewSettlementButton.setOnClickListener {
+        viewSettlementButton.setOnClickListener {
             startActivity(Intent(this, SettlementActivity::class.java))
+        }
+
+        viewOverviewButton.setOnClickListener {
+            startActivity(Intent(this, OverviewActivity::class.java))
         }
     }
 
     override fun onResume() {
         super.onResume()
-        binding.currencyInfo.text = getString(
+        currencyInfo.text = getString(
             R.string.currency_display,
             TripRepository.displayCurrency.displayName
         )

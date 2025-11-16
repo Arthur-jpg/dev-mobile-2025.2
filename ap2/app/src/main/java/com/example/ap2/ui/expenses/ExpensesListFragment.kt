@@ -5,38 +5,38 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.ap2.R
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ap2.AddExpenseActivity
+import com.example.ap2.R
 import com.example.ap2.data.TripRepository
-import com.example.ap2.databinding.FragmentExpensesListBinding
 import com.example.ap2.model.Expense
 
 class ExpensesListFragment : Fragment() {
 
-    private var _binding: FragmentExpensesListBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var adapter: ExpenseAdapter
+    private var adapter: ExpenseAdapter? = null
+    private var expensesRecycler: RecyclerView? = null
+    private var emptyState: TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentExpensesListBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    ): View = inflater.inflate(R.layout.fragment_expenses_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        expensesRecycler = view.findViewById(R.id.expensesRecycler)
+        emptyState = view.findViewById(R.id.emptyState)
         adapter = ExpenseAdapter(
             onEdit = { expense -> openExpenseEditor(expense) },
             onDelete = { expense -> confirmDelete(expense) }
         )
-        binding.expensesRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.expensesRecycler.adapter = adapter
+        expensesRecycler?.layoutManager = LinearLayoutManager(requireContext())
+        expensesRecycler?.adapter = adapter
         refreshList()
     }
 
@@ -47,9 +47,9 @@ class ExpensesListFragment : Fragment() {
 
     private fun refreshList() {
         val expenses = TripRepository.getExpenses()
-        adapter.displayCurrency = TripRepository.displayCurrency
-        adapter.submitList(expenses)
-        binding.emptyState.visibility = if (expenses.isEmpty()) View.VISIBLE else View.GONE
+        adapter?.displayCurrency = TripRepository.displayCurrency
+        adapter?.submitList(expenses)
+        emptyState?.visibility = if (expenses.isEmpty()) View.VISIBLE else View.GONE
     }
 
     private fun openExpenseEditor(expense: Expense) {
@@ -71,8 +71,4 @@ class ExpensesListFragment : Fragment() {
             .show()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

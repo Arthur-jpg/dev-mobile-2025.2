@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/sea_background"
-    tools:context=".ExpensesActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".OverviewActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/expenses_title" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,17 +19,9 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/expenses_tip"
-            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:textColor="@color/sea_on_surface" />
-
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             app:cardCornerRadius="24dp">
 
             <LinearLayout
@@ -39,34 +30,43 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/currencyInfo"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Moeda: Real (BRL)"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/overview_total_label" />
+
+                    <Spinner
+                        android:id="@+id/overviewCurrencySpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
                 <TextView
+                    android:id="@+id/overviewTotalValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/settlement_balances"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                    android:text="R$ 0,00"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/viewSettlementButton"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="Ver fechamento" />
+                    android:text="@string/overview_participants_label" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/viewOverviewButton"
-                    style="?attr/materialButtonOutlinedStyle"
+                <TextView
+                    android:id="@+id/overviewParticipantsValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/overview_button" />
+                    android:text="0 participantes"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -84,17 +84,5 @@
                 tools:name="com.example.ap2.ui.expenses.ExpensesListFragment" />
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/addExpenseFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Adicionar despesa"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
-        app:icon="@android:drawable/ic_input_add"
-        app:layout_anchor="@id/fragmentContainer"
-        app:layout_anchorGravity="bottom|end"
-        app:layout_dodgeInsetEdges="bottom" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

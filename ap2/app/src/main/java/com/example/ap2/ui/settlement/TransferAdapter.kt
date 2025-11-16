@@ -1,9 +1,11 @@
 package com.example.ap2.ui.settlement
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ap2.databinding.ItemTransferBinding
+import com.example.ap2.R
 import com.example.ap2.model.Currency
 import com.example.ap2.model.Transfer
 
@@ -18,9 +20,9 @@ class TransferAdapter(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransferViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemTransferBinding.inflate(inflater, parent, false)
-        return TransferViewHolder(binding)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_transfer, parent, false)
+        return TransferViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: TransferViewHolder, position: Int) {
@@ -36,10 +38,13 @@ class TransferAdapter(
     }
 
     class TransferViewHolder(
-        private val binding: ItemTransferBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+        itemView: View
+    ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(transfer: Transfer, displayCurrency: Currency) = with(binding) {
+        private val primaryText: TextView = itemView.findViewById(R.id.primaryText)
+        private val secondaryText: TextView = itemView.findViewById(R.id.secondaryText)
+
+        fun bind(transfer: Transfer, displayCurrency: Currency) {
             val converted = transfer.amount.convertTo(displayCurrency)
             primaryText.text = "${transfer.from.name} → ${transfer.to.name}"
             secondaryText.text = converted.format()

@@ -54,11 +54,17 @@ Este documento explica, passo a passo, como o aplicativo foi construído, quais 
   - Card com informações de moeda e botão “Ver fechamento” (abre `SettlementActivity`).
   - FragmentContainerView que recebe o `ExpensesListFragment` (injeção feita no `onCreate`).
   - FAB “Adicionar despesa” que abre `AddExpenseActivity`.
+- A partir dessa tela o usuário pode acessar também a **Visão geral** (novo botão “Ver visão geral”), que reaproveita o mesmo fragmento para mostrar as despesas em outro contexto.
 - Também expõe um menu com Intents implícitas:
   - `ACTION_VIEW` para abrir site do Ibmec.
   - `ACTION_SENDTO` com `mailto` para simular envio de e-mail.
 
-### 3.4 `ExpensesListFragment`
+### 3.4 `OverviewActivity`
+- Tela adicional que reutiliza o `ExpensesListFragment` para oferecer uma visão consolidada antes de ir para o fechamento.
+- Mostra um cartão com o total gasto na moeda selecionada e a quantidade de participantes cadastrados, além do fragmento com a lista reutilizada.
+- Pode ser acessada a partir do botão “Ver visão geral” na `ExpensesActivity`.
+
+### 3.5 `ExpensesListFragment`
 - Responsável por exibir a lista atualizada de despesas.
 - Ao criar:
   1. Instancia `ExpenseAdapter` com lambdas de ação (`onEdit`, `onDelete`).
@@ -69,7 +75,7 @@ Este documento explica, passo a passo, como o aplicativo foi construído, quais 
   - **Editar:** abre `AddExpenseActivity` passando `EXTRA_EXPENSE_ID` via Intent.
   - **Excluir:** pede confirmação (`AlertDialog`) e chama `TripRepository.removeExpense(id)`.
 
-### 3.5 `AddExpenseActivity`
+### 3.6 `AddExpenseActivity`
 - Tela usada para criar ou editar despesas.
 - Passo a passo:
   1. Recupera participantes do repositório (se não houver, fecha com Toast).
@@ -89,7 +95,7 @@ Este documento explica, passo a passo, como o aplicativo foi construído, quais 
       - Se for edição ⇒ `TripRepository.updateExpense(...)`.
       - Mostra `Toast` e finaliza a Activity.
 
-### 3.6 `SettlementActivity`
+### 3.7 `SettlementActivity`
 - Consulta participantes + despesas e usa `ExpenseCalculator.buildSummary(...)` para gerar:
   - `totalSpent`
   - `balances`: mapa com saldo de cada participante.

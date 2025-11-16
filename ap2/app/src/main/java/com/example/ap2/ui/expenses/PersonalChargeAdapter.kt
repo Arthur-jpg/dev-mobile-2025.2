@@ -1,10 +1,13 @@
 package com.example.ap2.ui.expenses
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ap2.data.TripRepository
-import com.example.ap2.databinding.ItemPersonalChargeBinding
+import com.example.ap2.R
 import com.example.ap2.model.PersonalCharge
 
 class PersonalChargeAdapter(
@@ -13,9 +16,9 @@ class PersonalChargeAdapter(
 ) : RecyclerView.Adapter<PersonalChargeAdapter.PersonalChargeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonalChargeViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemPersonalChargeBinding.inflate(inflater, parent, false)
-        return PersonalChargeViewHolder(binding)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_personal_charge, parent, false)
+        return PersonalChargeViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: PersonalChargeViewHolder, position: Int) {
@@ -29,10 +32,14 @@ class PersonalChargeAdapter(
     }
 
     class PersonalChargeViewHolder(
-        private val binding: ItemPersonalChargeBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+        itemView: View
+    ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(charge: PersonalCharge, onRemove: (PersonalCharge) -> Unit) = with(binding) {
+        private val title: TextView = itemView.findViewById(R.id.title)
+        private val amount: TextView = itemView.findViewById(R.id.amount)
+        private val removeButton: ImageButton = itemView.findViewById(R.id.removeButton)
+
+        fun bind(charge: PersonalCharge, onRemove: (PersonalCharge) -> Unit) {
             val name = TripRepository.getParticipants()
                 .find { it.id == charge.participantId }
                 ?.name ?: "?"
