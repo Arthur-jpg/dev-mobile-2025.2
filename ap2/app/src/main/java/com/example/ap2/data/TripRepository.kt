@@ -71,6 +71,8 @@ object TripRepository {
 
     fun getExpenses(): List<Expense> = expenses.toList()
 
+    fun getExpense(id: String): Expense? = expenses.find { it.id == id }
+
     fun addExpense(
         title: String,
         payerId: String,
@@ -78,19 +80,45 @@ object TripRepository {
         sharedParticipantIds: List<String>,
         personalCharges: List<PersonalCharge>
     ) {
-        val cleanedShared = sharedParticipantIds.distinct()
-        val validPersonalCharges = personalCharges
-            .filter { charge -> participants.any { it.id == charge.participantId } }
-        val expense = Expense(
+        val expense = buildExpense(
             id = UUID.randomUUID().toString(),
-            title = title.trim().ifBlank { "Despesa sem nome" },
+            title = title,
             payerId = payerId,
-            total = amount,
-            sharedParticipantIds = cleanedShared,
-            personalCharges = validPersonalCharges
+            amount = amount,
+            sharedParticipantIds = sharedParticipantIds,
+            personalCharges = personalCharges
         )
         expenses.add(expense)
         persistState()
+    }
+
+    fun updateExpense(
+        id: String,
+        title: String,
+        payerId: String,
+        amount: Money,
+        sharedParticipantIds: List<String>,
+        personalCharges: List<PersonalCharge>
+    ) {
+        val index = expenses.indexOfFirst { it.id == id }
+        if (index == -1) return
+        val updatedExpense = buildExpense(
+            id = id,
+            title = title,
+            payerId = payerId,
+            amount = amount,
+            sharedParticipantIds = sharedParticipantIds,
+            personalCharges = personalCharges
+        )
+        expenses[index] = updatedExpense
+        persistState()
+    }
+
+    fun removeExpense(expenseId: String) {
+        val changed = expenses.removeAll { it.id == expenseId }
+        if (changed) {
+            persistState()
+        }
     }
 
     fun clearAll() {
@@ -128,6 +156,27 @@ object TripRepository {
         }.onFailure {
             clearAll()
         }
+    }
+
+    private fun buildExpense(
+        id: String,
+        title: String,
+        payerId: String,
+        amount: Money,
+        sharedParticipantIds: List<String>,
+        personalCharges: List<PersonalCharge>
+    ): Expense {
+        val cleanedShared = sharedParticipantIds.distinct()
+        val validPersonalCharges = personalCharges
+            .filter { charge -> participants.any { it.id == charge.participantId } }
+        return Expense(
+            id = id,
+            title = title.trim().ifBlank { "Despesa sem nome" },
+            payerId = payerId,
+            total = amount,
+            sharedParticipantIds = cleanedShared,
+            personalCharges = validPersonalCharges
+        )
     }
 
     private fun JSONObject.toExpense(): Expense {

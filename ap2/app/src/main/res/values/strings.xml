@@ -14,11 +14,17 @@
     <string name="expenses_title">Despesas</string>
     <string name="expenses_tip">Visualize cada gasto e mantenha todo mundo alinhado.</string>
     <string name="expenses_empty">Nenhuma despesa cadastrada.\nClique no botão para adicionar.</string>
+    <string name="expense_edit">Editar despesa</string>
+    <string name="expense_delete">Excluir despesa</string>
+    <string name="expense_delete_confirmation">Deseja remover esta despesa? Essa ação não pode ser desfeita.</string>
+    <string name="expense_delete_title">Remover despesa</string>
     <string name="add_expense_title">Nome da despesa</string>
     <string name="add_expense_amount_hint">Valor total</string>
     <string name="add_expense_currency">Moeda</string>
     <string name="add_expense_payer">Quem pagou?</string>
     <string name="add_expense_shared">Quem participa da divisão?</string>
+    <string name="add_expense_new_title">Nova despesa</string>
+    <string name="add_expense_edit_title">Editar despesa</string>
     <string name="add_personal_charge">Adicionar ajuste individual</string>
     <string name="personal_charge_empty">Sem ajustes individuais</string>
     <string name="save_expense">Salvar despesa</string>

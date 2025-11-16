@@ -13,7 +13,10 @@ import com.example.ap2.model.CurrencyConverter
 import com.example.ap2.model.Expense
 import com.example.ap2.model.Money
 
-class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Diff) {
+class ExpenseAdapter(
+    private val onEdit: (Expense) -> Unit,
+    private val onDelete: (Expense) -> Unit
+) : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Diff) {
 
     var displayCurrency: Currency = TripRepository.displayCurrency
         set(value) {
@@ -24,14 +27,18 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Di
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemExpenseBinding.inflate(inflater, parent, false)
-        return ExpenseViewHolder(binding)
+        return ExpenseViewHolder(binding, onEdit, onDelete)
     }
 
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
         holder.bind(getItem(position), displayCurrency)
     }
 
-    class ExpenseViewHolder(private val binding: ItemExpenseBinding) :
+    class ExpenseViewHolder(
+        private val binding: ItemExpenseBinding,
+        private val onEdit: (Expense) -> Unit,
+        private val onDelete: (Expense) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(expense: Expense, currency: Currency) = with(binding) {
@@ -66,6 +73,8 @@ class ExpenseAdapter : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Di
             } else {
                 "Ajustes individuais: $personal"
             }
+            editButton.setOnClickListener { onEdit(expense) }
+            deleteButton.setOnClickListener { onDelete(expense) }
         }
     }
 
