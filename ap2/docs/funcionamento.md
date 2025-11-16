@@ -5,7 +5,7 @@ Este documento explica, passo a passo, como o aplicativo foi construído, quais 
 ## 1. Estrutura Geral
 
 - **Linguagem:** Kotlin.
-- **Arquitetura simplificada:** Activities + Fragment + um repositório em memória (`TripRepository`), com persistência em `SharedPreferences`.
+- **Arquitetura simplificada:** Activities + Fragment + um repositório em memória (`TripRepository`), sem persistência em disco.
 - **Principais componentes:**
   - `MainActivity` (Onboarding)
   - `ParticipantsActivity`
@@ -25,10 +25,8 @@ Este documento explica, passo a passo, como o aplicativo foi construído, quais 
   3. Lista de `Participant`.
   4. Lista de `Expense`.
 - Persistência:
-  - Na inicialização do app (`SplitEasyApp`), chamamos `TripRepository.initialize(context)`.
-  - O repositório salva todo o estado em `SharedPreferences` como um JSON único.
-  - Cada alteração (adicionar participante, despesa etc.) chama `persistState()` para gravar o JSON.
-  - Ao abrir o app novamente, `loadState()` reconstrói a memória a partir desse JSON.
+  - O repositório mantém os dados apenas em memória enquanto o app está aberto.
+  - Ao fechar o app, os dados são descartados (o que é suficiente para a atividade da disciplina).
 
 ## 3. Fluxo de Telas e Dados
 
@@ -131,12 +129,9 @@ Este documento explica, passo a passo, como o aplicativo foi construído, quais 
 
 ## 6. Persistência e Estado
 
-- `TripRepository.initialize(context)` é chamado apenas uma vez no `Application` (`SplitEasyApp`) para manter o estado em memória.
-- Todos os métodos de escrita chamam `persistState()` que:
-  - Constrói um `JSONObject` com todas as entidades.
-  - Salva o JSON em `SharedPreferences`.
-- Quando o app fecha, nada se perde.
-- Se quiser começar uma viagem do zero, basta chamar `TripRepository.clearAll()` (hoje é feito apenas quando o usuário reinstala o app ou limpa dados).
+- O `TripRepository` guarda os dados apenas em listas em memória (`participants` e `expenses`).
+- Ao fechar o app ou matar o processo, os dados são perdidos e uma nova viagem começa do zero na próxima execução.
+- Se quiser explicitamente começar outra viagem durante o uso, basta chamar `TripRepository.clearAll()` de algum ponto do código.
 
 ## 7. Boas Práticas para Estudos
 

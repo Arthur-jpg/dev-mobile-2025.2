@@ -13,7 +13,6 @@ Aplicativo Android criado para a Avaliação Parcial 2 da disciplina de Desenvol
 - 5 telas distintas + 1 `Fragment` funcional (`ExpensesListFragment`).
 - Navegação explícita entre telas e Intents implícitas para abrir site, enviar e-mail e compartilhar o fechamento.
 - Mais de cinco componentes de UI (ImageView, TextInputLayout/EditText, Button, Spinner, ChipGroup, RecyclerView, FAB etc.) com feedback visual e toasts.
-- Persistência local via `SharedPreferences`, garantindo que viagem, participantes e despesas permaneçam após fechar o app.
 - Resultado personalizado: o `ExpenseCalculator` processa todas as respostas e gera análise final com saldos e transferências.
 
 ## 🛠️ Stack Principal
@@ -21,7 +20,7 @@ Aplicativo Android criado para a Avaliação Parcial 2 da disciplina de Desenvol
 - Material Design 3
 - ViewBinding
 - RecyclerView / AdapterList
-- `SharedPreferences` + JSON para persistência simples
+- Listas em memória para armazenar participantes e despesas enquanto o app está aberto
 
 ## ▶️ Como Executar
 1. **Clonar o repositório**

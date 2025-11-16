@@ -1,24 +1,16 @@
 package com.example.ap2.data
 
-import android.content.Context
-import android.content.SharedPreferences
 import com.example.ap2.model.Currency
 import com.example.ap2.model.Expense
 import com.example.ap2.model.Money
 import com.example.ap2.model.Participant
 import com.example.ap2.model.PersonalCharge
-import org.json.JSONArray
-import org.json.JSONObject
 import java.util.UUID
 
 object TripRepository {
 
-    private const val PREFS_NAME = "trip_repository"
-    private const val KEY_STATE = "trip_state"
-
     private val participants = mutableListOf<Participant>()
     private val expenses = mutableListOf<Expense>()
-    private var preferences: SharedPreferences? = null
 
     var tripName: String = "Minha viagem"
         private set
@@ -26,20 +18,12 @@ object TripRepository {
     var displayCurrency: Currency = Currency.BRL
         private set
 
-    fun initialize(context: Context) {
-        if (preferences != null) return
-        preferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        loadState()
-    }
-
     fun setTripName(name: String) {
         tripName = name.ifBlank { "Minha viagem" }
-        persistState()
     }
 
     fun updateDisplayCurrency(currency: Currency) {
         displayCurrency = currency
-        persistState()
     }
 
     fun getParticipants(): List<Participant> = participants.toList()
@@ -50,7 +34,6 @@ object TripRepository {
         if (exists) error("Participante já existe")
         val participant = Participant(name = name.trim())
         participants.add(participant)
-        persistState()
         return participant
     }
 
@@ -66,7 +49,6 @@ object TripRepository {
         }
         expenses.clear()
         expenses.addAll(updatedExpenses)
-        persistState()
     }
 
     fun getExpenses(): List<Expense> = expenses.toList()
@@ -89,7 +71,6 @@ object TripRepository {
             personalCharges = personalCharges
         )
         expenses.add(expense)
-        persistState()
     }
 
     fun updateExpense(
@@ -111,14 +92,10 @@ object TripRepository {
             personalCharges = personalCharges
         )
         expenses[index] = updatedExpense
-        persistState()
     }
 
     fun removeExpense(expenseId: String) {
-        val changed = expenses.removeAll { it.id == expenseId }
-        if (changed) {
-            persistState()
-        }
+        expenses.removeAll { it.id == expenseId }
     }
 
     fun clearAll() {
@@ -126,36 +103,6 @@ object TripRepository {
         expenses.clear()
         tripName = "Minha viagem"
         displayCurrency = Currency.BRL
-        preferences?.edit()?.remove(KEY_STATE)?.apply()
-    }
-
-    private fun loadState() {
-        val prefs = preferences ?: return
-        val saved = prefs.getString(KEY_STATE, null) ?: return
-        runCatching {
-            val json = JSONObject(saved)
-            tripName = json.optString("tripName", "Minha viagem")
-            displayCurrency = json.optString("displayCurrency").toCurrency()
-            participants.clear()
-            val participantsArray = json.optJSONArray("participants") ?: JSONArray()
-            for (i in 0 until participantsArray.length()) {
-                val item = participantsArray.getJSONObject(i)
-                participants.add(
-                    Participant(
-                        id = item.optString("id", UUID.randomUUID().toString()),
-                        name = item.optString("name")
-                    )
-                )
-            }
-            expenses.clear()
-            val expensesArray = json.optJSONArray("expenses") ?: JSONArray()
-            for (i in 0 until expensesArray.length()) {
-                val expenseJson = expensesArray.getJSONObject(i)
-                expenses += expenseJson.toExpense()
-            }
-        }.onFailure {
-            clearAll()
-        }
     }
 
     private fun buildExpense(
@@ -178,100 +125,4 @@ object TripRepository {
             personalCharges = validPersonalCharges
         )
     }
-
-    private fun JSONObject.toExpense(): Expense {
-        val totalObject = getJSONObject("total")
-        val sharedArray = optJSONArray("sharedParticipantIds") ?: JSONArray()
-        val sharedIds = mutableListOf<String>()
-        for (j in 0 until sharedArray.length()) {
-            sharedIds += sharedArray.optString(j)
-        }
-        val chargesArray = optJSONArray("personalCharges") ?: JSONArray()
-        val charges = mutableListOf<PersonalCharge>()
-        for (j in 0 until chargesArray.length()) {
-            val chargeObject = chargesArray.getJSONObject(j)
-            charges += chargeObject.toPersonalCharge()
-        }
-        return Expense(
-            id = optString("id", UUID.randomUUID().toString()),
-            title = optString("title"),
-            payerId = optString("payerId"),
-            total = Money(
-                amount = totalObject.optDouble("amount", 0.0),
-                currency = totalObject.optString("currency").toCurrency()
-            ),
-            sharedParticipantIds = sharedIds,
-            personalCharges = charges
-        )
-    }
-
-    private fun JSONObject.toPersonalCharge(): PersonalCharge {
-        val moneyObject = getJSONObject("money")
-        val noteValue = optStringOrNull("note")
-        return PersonalCharge(
-            id = optString("id", UUID.randomUUID().toString()),
-            participantId = optString("participantId"),
-            money = Money(
-                amount = moneyObject.optDouble("amount", 0.0),
-                currency = moneyObject.optString("currency").toCurrency()
-            ),
-            note = noteValue
-        )
-    }
-
-    private fun persistState() {
-        val prefs = preferences ?: return
-        val json = JSONObject().apply {
-            put("tripName", tripName)
-            put("displayCurrency", displayCurrency.name)
-            put("participants", JSONArray().apply {
-                participants.forEach { participant ->
-                    put(JSONObject().apply {
-                        put("id", participant.id)
-                        put("name", participant.name)
-                    })
-                }
-            })
-            put("expenses", JSONArray().apply {
-                expenses.forEach { expense ->
-                    put(expense.toJson())
-                }
-            })
-        }
-        prefs.edit().putString(KEY_STATE, json.toString()).apply()
-    }
-
-    private fun Expense.toJson(): JSONObject = JSONObject().apply {
-        put("id", id)
-        put("title", title)
-        put("payerId", payerId)
-        put("total", JSONObject().apply {
-            put("amount", total.amount)
-            put("currency", total.currency.name)
-        })
-        put("sharedParticipantIds", JSONArray().apply {
-            sharedParticipantIds.forEach { put(it) }
-        })
-        put("personalCharges", JSONArray().apply {
-            personalCharges.forEach { charge ->
-                put(charge.toJson())
-            }
-        })
-    }
-
-    private fun PersonalCharge.toJson(): JSONObject = JSONObject().apply {
-        put("id", id)
-        put("participantId", participantId)
-        note?.let { put("note", it) }
-        put("money", JSONObject().apply {
-            put("amount", money.amount)
-            put("currency", money.currency.name)
-        })
-    }
-
-    private fun String?.toCurrency(): Currency =
-        runCatching { Currency.valueOf(this ?: Currency.BRL.name) }.getOrDefault(Currency.BRL)
-
-    private fun JSONObject.optStringOrNull(name: String): String? =
-        if (has(name) && !isNull(name)) optString(name) else null
 }
