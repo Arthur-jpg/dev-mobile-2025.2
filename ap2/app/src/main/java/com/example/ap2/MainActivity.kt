@@ -17,10 +17,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (savedInstanceState == null) {
-            TripRepository.clearAll()
-        }
-
         binding.tripNameInput.setText(TripRepository.tripName)
         binding.startButton.setOnClickListener {
             val tripName = binding.tripNameInput.text?.toString().orEmpty()

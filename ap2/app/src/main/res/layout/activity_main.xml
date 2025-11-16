@@ -5,27 +5,33 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_app_gradient"
     android:padding="24dp"
     tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/headerImage"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_launcher_foreground"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_trip_plane"
+        android:tint="@color/sea_on_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ImageContrastCheck" />
+        tools:ignore="ContentDescription,ImageContrastCheck" />
 
     <TextView
         android:id="@+id/titleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
         android:text="@string/onboarding_title"
-        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+        android:textColor="@color/sea_on_primary"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerImage" />
@@ -34,38 +40,63 @@
         android:id="@+id/subtitleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/onboarding_subtitle"
-        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="@string/onboarding_tagline"
+        android:textColor="@color/sea_on_primary"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleText" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tripNameContainer"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/onboardingCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="10dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/subtitleText">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tripNameInput"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/onboarding_trip_name_hint" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/startButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/onboarding_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tripNameContainer" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/onboarding_subtitle"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="@color/sea_on_surface" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tripNameContainer"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tripNameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/onboarding_trip_name_hint" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/startButton"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/onboarding_button" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

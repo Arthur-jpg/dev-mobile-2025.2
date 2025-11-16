@@ -2,14 +2,17 @@
     <string name="app_name">SplitEasy</string>
     <string name="onboarding_title">Organize viagens em grupo</string>
     <string name="onboarding_subtitle">Cadastre o nome da aventura e convide o pessoal para dividir cada gasto.</string>
+    <string name="onboarding_tagline">Seu copiloto financeiro para a próxima trip.</string>
     <string name="onboarding_trip_name_hint">Nome da viagem</string>
     <string name="onboarding_button">Começar</string>
     <string name="participants_title">Quem vai na viagem?</string>
+    <string name="participants_description">Adicione a tripulação e deixe tudo pronto antes de embarcar.</string>
     <string name="participants_hint">Nome do participante</string>
     <string name="participants_add">Adicionar</string>
     <string name="participants_next">Ir para as despesas</string>
     <string name="empty_participants">Sem pessoas ainda. Adicione ao menos duas.</string>
     <string name="expenses_title">Despesas</string>
+    <string name="expenses_tip">Visualize cada gasto e mantenha todo mundo alinhado.</string>
     <string name="expenses_empty">Nenhuma despesa cadastrada.\nClique no botão para adicionar.</string>
     <string name="add_expense_title">Nome da despesa</string>
     <string name="add_expense_amount_hint">Valor total</string>

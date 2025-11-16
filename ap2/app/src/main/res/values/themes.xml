@@ -1,8 +1,27 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.Ap2" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/sea_primary</item>
+        <item name="colorOnPrimary">@color/sea_on_primary</item>
+        <item name="colorPrimaryContainer">@color/sea_surface_variant</item>
+        <item name="colorOnPrimaryContainer">@color/sea_on_surface</item>
+
+        <item name="colorSecondary">@color/sea_secondary</item>
+        <item name="colorOnSecondary">@color/sea_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/sea_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/sea_on_surface</item>
+
+        <item name="colorTertiary">@color/sea_tertiary</item>
+        <item name="colorOnTertiary">@color/sea_on_primary</item>
+
+        <item name="colorSurface">@color/sea_surface</item>
+        <item name="colorSurfaceVariant">@color/sea_surface_variant</item>
+        <item name="colorOnSurface">@color/sea_on_surface</item>
+        <item name="android:colorBackground">@color/sea_background</item>
+        <item name="colorOutline">@color/sea_outline</item>
+
+        <item name="android:statusBarColor" tools:targetApi="l">@color/sea_primary_dark</item>
+        <item name="android:navigationBarColor">@color/sea_surface</item>
+        <item name="android:windowBackground">@color/sea_background</item>
     </style>
 
     <style name="Theme.Ap2" parent="Base.Theme.Ap2" />

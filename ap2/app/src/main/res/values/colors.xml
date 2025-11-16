@@ -2,4 +2,20 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="sea_primary">#0F9BD7</color>
+    <color name="sea_primary_dark">#0E5F91</color>
+    <color name="sea_secondary">#FF8A5C</color>
+    <color name="sea_secondary_container">#FFE4D6</color>
+    <color name="sea_tertiary">#16C5A5</color>
+    <color name="sea_background">#F2FAFF</color>
+    <color name="sea_surface">#FFFFFFFF</color>
+    <color name="sea_surface_variant">#E0EFF7</color>
+    <color name="sea_on_primary">#FFFFFFFF</color>
+    <color name="sea_on_secondary">#442205</color>
+    <color name="sea_on_surface">#142136</color>
+    <color name="sea_outline">#B5C8D6</color>
+
+    <color name="sunrise_start">#0F9BD7</color>
+    <color name="sunrise_end">#15C0A4</color>
 </resources>

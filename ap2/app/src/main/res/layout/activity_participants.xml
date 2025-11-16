@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/sea_background"
     tools:context=".ParticipantsActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -18,53 +19,86 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
+        android:background="@color/sea_background"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
         <TextView
-            android:id="@+id/emptyState"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="16dp"
-            android:text="@string/empty_participants"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            android:visibility="gone" />
+            android:text="@string/participants_description"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textColor="@color/sea_on_surface" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/participantsList"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="16dp"
             android:layout_weight="1"
-            tools:listitem="@layout/item_participant" />
+            app:cardCornerRadius="24dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/participantInputContainer"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/participantsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/item_participant" />
+
+                <TextView
+                    android:id="@+id/emptyState"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:text="@string/empty_participants"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="24dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/participantInput"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/participants_hint" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/addParticipantButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/participants_add" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/participantInputContainer"
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/participantInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/participants_hint" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addParticipantButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/participants_add" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/goToExpensesButton"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="20dp"
             android:text="@string/participants_next" />
     </LinearLayout>
 
