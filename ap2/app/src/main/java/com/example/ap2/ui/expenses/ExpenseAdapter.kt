@@ -3,8 +3,6 @@ package com.example.ap2.ui.expenses
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.ImageButton
 import android.widget.TextView
@@ -18,13 +16,21 @@ import com.example.ap2.model.Money
 class ExpenseAdapter(
     private val onEdit: (Expense) -> Unit,
     private val onDelete: (Expense) -> Unit
-) : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(Diff) {
+) : RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder>() {
+
+    private val items = mutableListOf<Expense>()
 
     var displayCurrency: Currency = TripRepository.displayCurrency
         set(value) {
             field = value
             notifyDataSetChanged()
         }
+
+    fun submitList(newItems: List<Expense>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -33,8 +39,10 @@ class ExpenseAdapter(
     }
 
     override fun onBindViewHolder(holder: ExpenseViewHolder, position: Int) {
-        holder.bind(getItem(position), displayCurrency)
+        holder.bind(items[position], displayCurrency)
     }
+
+    override fun getItemCount(): Int = items.size
 
     class ExpenseViewHolder(
         itemView: View,
@@ -86,13 +94,5 @@ class ExpenseAdapter(
             editButton.setOnClickListener { onEdit(expense) }
             deleteButton.setOnClickListener { onDelete(expense) }
         }
-    }
-
-    private object Diff : DiffUtil.ItemCallback<Expense>() {
-        override fun areItemsTheSame(oldItem: Expense, newItem: Expense): Boolean =
-            oldItem.id == newItem.id
-
-        override fun areContentsTheSame(oldItem: Expense, newItem: Expense): Boolean =
-            oldItem == newItem
     }
 }

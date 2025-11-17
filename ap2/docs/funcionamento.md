@@ -136,13 +136,231 @@ Este documento explica, passo a passo, como o aplicativo foi construído, quais 
 ## 7. Boas Práticas para Estudos
 
 - Procure o arquivo relacionado a cada tela na pasta `app/src/main/java/com/example/ap2`.
-- Observe como o View Binding (`ActivityXxxBinding`) evita `findViewById`.
-- Veja como `RecyclerView` e os Adapters usam `DiffUtil` (no `ParticipantAdapter` e `ExpenseAdapter`).
+- Observe como cada Activity usa `setContentView` e `findViewById` para ligar o XML ao código.
+- Veja como `RecyclerView` e os Adapters usam `DiffUtil` (no `ParticipantAdapter` e `ExpenseAdapter`) para atualizar listas de forma eficiente.
 - Para testar o fluxo, suba o app no emulador:
   1. Cadastre participantes.
   2. Adicione despesas variadas (com ajustes individuais).
   3. Edite/exclua para ver a atualização imediata.
   4. Verifique o fechamento e compartilhe o resumo.
 
+## 8. Modelos (data classes) e Conversão de Moeda
+
+### 8.1 `Currency`, `Money` e `CurrencyConverter`
+
+- **`Currency`** (`app/src/main/java/com/example/ap2/model/Money.kt`):
+  - Enum que representa as moedas suportadas:
+    - `BRL` (Real), `USD` (Dólar), `EUR` (Euro).
+  - Cada valor tem um `displayName` (nome amigável) e um `symbol` (R$, US$, €).
+  - É usado na interface (spinners) e nas conversões de valores.
+
+- **`Money`**:
+  - Classe que junta dois dados:
+    - `amount: Double` → o valor numérico.
+    - `currency: Currency` → em qual moeda esse valor está.
+  - Métodos principais:
+    - `format()` → devolve uma `String` pronta para mostrar na tela (inclui símbolo e número formatado).
+    - `convertTo(target: Currency)` → converte o valor atual para outra moeda, usando o `CurrencyConverter`.
+
+- **`CurrencyConverter`**:
+  - Objeto responsável por converter de uma moeda para outra.
+  - Tem um mapa com taxas de referência para transformar qualquer moeda em BRL.
+  - A função `convert(amount, from, to)`:
+    1. Converte o valor da moeda de origem para BRL.
+    2. Converte de BRL para a moeda destino.
+  - É usado em:
+    - `AddExpenseActivity` para validar ajustes individuais.
+    - `ExpenseCalculator` para normalizar valores.
+    - `OverviewActivity` e `SettlementActivity` para exibir totais na moeda escolhida.
+
+### 8.2 `Participant`, `PersonalCharge`, `Expense`, `Transfer`
+
+- **`Participant`** (`app/src/main/java/com/example/ap2/model/TripModels.kt`):
+  - Representa uma pessoa que participa da viagem.
+  - Tem:
+    - `id: String` → gerado automaticamente com `UUID`.
+    - `name: String` → nome digitado pelo usuário.
+
+- **`PersonalCharge`**:
+  - Representa um ajuste individual de uma despesa (por exemplo, “só o João pagou o estacionamento”).
+  - Campos:
+    - `participantId` → id de quem vai pagar esse item.
+    - `money: Money` → valor e moeda.
+    - `note: String?` → descrição opcional.
+
+- **`Expense`**:
+  - Representa uma despesa da viagem.
+  - Campos:
+    - `title` → nome da despesa.
+    - `payerId` → id de quem pagou.
+    - `total: Money` → valor total da despesa.
+    - `sharedParticipantIds: List<String>` → ids das pessoas que vão dividir o valor restante igualmente.
+    - `personalCharges: List<PersonalCharge>` → lista de ajustes individuais.
+
+- **`Transfer`**:
+  - Representa um “acerto” sugerido no fechamento.
+  - Campos:
+    - `from: Participant` → quem deve pagar.
+    - `to: Participant` → quem deve receber.
+    - `amount: Money` → quanto deve ser pago.
+
+## 9. Repositório (`TripRepository`)
+
+O `TripRepository` já é detalhado em `docs/trip_repository.md`, mas aqui vai um resumo rápido focado na relação com as telas:
+
+- Guarda em memória:
+  - `participants: MutableList<Participant>`
+  - `expenses: MutableList<Expense>`
+  - `tripName: String`
+  - `displayCurrency: Currency`
+- Fornece funções para:
+  - **Participantes:** `getParticipants`, `addParticipant`, `removeParticipant`.
+  - **Despesas:** `getExpenses`, `getExpense`, `addExpense`, `updateExpense`, `removeExpense`.
+  - **Configurações:** `setTripName`, `updateDisplayCurrency`, `clearAll`.
+- Todas as Activities/Fragment usam essas funções para:
+  - Ler dados atuais (para preencher listas e textos).
+  - Alterar dados quando o usuário interage (adiciona/remover/edita).
+
+## 10. Adapters e Fragment
+
+### 10.1 `ParticipantAdapter`
+
+- Caminho: `app/src/main/java/com/example/ap2/ui/participants/ParticipantAdapter.kt`.
+- Extende `ListAdapter<Participant, ParticipantViewHolder>` para:
+  - Mostrar a lista de participantes na `ParticipantsActivity`.
+  - Atualizar a lista com eficiência usando `DiffUtil`.
+- Cada item de lista:
+  - Mostra o nome (`participantName`).
+  - Tem um botão de remover (`removeButton`) que chama a lambda `onRemove(participant)` recebida da Activity.
+
+### 10.2 `ExpenseAdapter`
+
+- Caminho: `app/src/main/java/com/example/ap2/ui/expenses/ExpenseAdapter.kt`.
+- Responsável por exibir cada `Expense` no `ExpensesListFragment`.
+- Para cada item:
+  - Mostra:
+    - título da despesa;
+    - quem pagou;
+    - valor original (`Money.format()`).
+    - valor convertido para a moeda de exibição (se for diferente).
+  - Mostra um resumo dos ajustes individuais (`PersonalCharge`).
+  - Tem botões:
+    - **Editar** → chama `onEdit(expense)` (abre `AddExpenseActivity` no modo edição).
+    - **Excluir** → chama `onDelete(expense)` (o fragment exibe o diálogo e remove pelo repositório).
+
+### 10.3 `PersonalChargeAdapter`
+
+- Caminho: `app/src/main/java/com/example/ap2/ui/expenses/PersonalChargeAdapter.kt`.
+- Mostra a lista de ajustes individuais dentro da `AddExpenseActivity`.
+- Cada item mostra:
+  - título (nome da pessoa + descrição).
+  - valor (`Money.format()`).
+  - botão de remover, que dispara `onRemove(charge)` para a Activity atualizar a lista local.
+
+### 10.4 `TransferAdapter`
+
+- Caminho: `app/src/main/java/com/example/ap2/ui/settlement/TransferAdapter.kt`.
+- Mostra as transferências sugeridas na `SettlementActivity`.
+- Para cada `Transfer`:
+  - Exibe um texto “Fulano → Sicrano”.
+  - Exibe o valor já convertido para a moeda de exibição.
+
+### 10.5 `ExpensesListFragment`
+
+- Caminho: `app/src/main/java/com/example/ap2/ui/expenses/ExpensesListFragment.kt`.
+- É o **único Fragment** do app.
+- Função principal:
+  - Mostrar a lista de despesas (usando `ExpenseAdapter`).
+  - Recarregar a lista sempre que a tela volta a ficar visível (`onResume`).
+  - Intermediar ações de editar/excluir:
+    - Editar → abre `AddExpenseActivity` com `EXTRA_EXPENSE_ID`.
+    - Excluir → mostra um `AlertDialog`, remove a despesa do `TripRepository` e atualiza a lista.
+- É reutilizado em:
+  - `ExpensesActivity` (tela principal de despesas).
+  - `OverviewActivity` (visão geral, com resumo + mesma lista de despesas).
+
+## 11. Arquivos de Documentação
+
+- `README.md`:
+  - Visão geral do app.
+  - Como rodar o projeto.
+  - Prints das telas.
+  - Como o app atende aos requisitos da AP2.
+
+- `docs/funcionamento.md` (este arquivo):
+  - Explica o fluxo completo, tela por tela.
+  - Relaciona componentes principais (Activities, Fragment, repositório, cálculo).
+
+- `docs/trip_repository.md`:
+  - Detalha o `TripRepository` com foco em:
+    - como as listas são mantidas;
+    - como cada função se relaciona com a interação do usuário;
+    - por que ele é melhor do que passar listas por `Intent` neste projeto.
+
+## 12. Perguntas e Respostas (para estudo e apresentação)
+
+### 12.1 Sobre Intents
+
+**P: O que é uma Intent explícita e onde usamos isso no app?**  
+R: Intent explícita é quando dizemos exatamente **qual Activity** queremos abrir.  
+Exemplos:
+- `Intent(this, ParticipantsActivity::class.java)` na `MainActivity`.
+- `Intent(this, ExpensesActivity::class.java)` na `ParticipantsActivity`.
+- `Intent(this, AddExpenseActivity::class.java)` e `Intent(this, SettlementActivity::class.java)` na `ExpensesActivity`.
+- `Intent(this, OverviewActivity::class.java)` no botão “Ver visão geral”.
+\n
+**P: E uma Intent implícita? Onde usamos?**  
+R: É quando pedimos ao Android para achar um app capaz de fazer uma ação, sem dizer qual Activity específica.  
+Exemplos:
+- Abrir site do Ibmec:
+  ```kotlin
+  Intent(Intent.ACTION_VIEW, Uri.parse(\"https://www.ibmec.br\"))
+  ```
+- Enviar e-mail:
+  ```kotlin
+  Intent(Intent.ACTION_SENDTO, Uri.parse(\"mailto:\"))
+  ```
+- Compartilhar resumo do fechamento:
+  ```kotlin
+  Intent(Intent.ACTION_SEND).apply { type = \"text/plain\" ... }
+  ```
+
+### 12.2 Sobre o Fragment
+
+**P: Qual fragmento o app usa e qual o papel dele?**  
+R: O app usa apenas o `ExpensesListFragment`. Ele é responsável por uma parte da tela: **a lista de despesas**.  
+Ele mostra os dados do `TripRepository`, permite editar/excluir despesas e é reutilizado em duas telas:
+- `ExpensesActivity` (tela principal de despesas).
+- `OverviewActivity` (visão geral).
+\n
+**P: Por que usar um Fragment em vez de colocar tudo na Activity?**  
+R: Porque o fragmento representa uma **porção reutilizável** da interface + comportamento.  
+Aqui, a lista de despesas aparece em mais de uma Activity; o fragmento permite escrever essa lógica uma vez só e encaixar em layouts diferentes.
+
+### 12.3 Sobre o TripRepository
+
+**P: Por que criamos o `TripRepository` em vez de passar dados pelas Intents?**  
+R: Passar listas completas entre Activities pela Intent exigiria usar `Serializable` ou `Parcelable` e `startActivityForResult`, o que é mais avançado.  
+Com o `TripRepository`:
+- mantemos tudo em uma única classe com listas em memória;
+- as telas só perguntam “quais são os participantes/despesas?” ou “adicione/remova tal item”;
+- o código usa apenas conceitos já vistos em sala: classes, listas e funções.
+
+**P: O que acontece com os dados se eu fechar o app?**  
+R: Como não há persistência em disco, os dados são apagados quando o processo do app é encerrado. Ao abrir novamente, a viagem começa do zero.
+
+### 12.4 Sobre o cálculo de divisão
+
+**P: Em qual moeda o cálculo é feito internamente?**  
+R: Sempre em BRL. Cada despesa e ajuste individual é convertido para BRL pelo `CurrencyConverter`.  
+Somente na hora de exibir (no overview e no fechamento) é que o valor total é convertido da base BRL para a moeda escolhida (`displayCurrency`).
+
+**P: O que são os “ajustes individuais” e como eles entram na conta?**  
+R: São valores que não entram na divisão igualitária (por exemplo, uma compra que só uma pessoa usou).  
+No cálculo:
+- Primeiro somamos todos os ajustes individuais em BRL;
+- Subtraímos isso do total da despesa para obter o “pool” que será dividido igualmente entre os participantes marcados;
+- Cada participante que participa da divisão paga uma parte igual desse pool, além de qualquer ajuste individual que ele tenha.
+
 ---
-Com este guia você deve conseguir entender como cada tela conversa com o repositório, como as Intents trocam dados entre Activities e como toda a lógica de divisão funciona por baixo dos panos. Bons estudos! ✈️
+Com este guia você deve conseguir entender como cada tela conversa com o repositório, como as Intents trocam dados entre Activities, como o Fragment é reutilizado e como toda a lógica de divisão funciona por baixo dos panos. Bons estudos! ✈️

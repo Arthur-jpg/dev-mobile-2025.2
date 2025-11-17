@@ -2,6 +2,8 @@ package com.example.ap2
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
@@ -12,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.core.view.isVisible
 import com.example.ap2.data.TripRepository
 import com.example.ap2.domain.ExpenseCalculator
-import com.example.ap2.extensions.onItemSelected
 import com.example.ap2.model.Currency
 import com.example.ap2.model.Money
 import com.example.ap2.model.Transfer
@@ -75,10 +76,20 @@ class SettlementActivity : AppCompatActivity() {
         currencySpinner.adapter = currencyAdapter
         val currentIndex = Currency.values().indexOf(TripRepository.displayCurrency)
         currencySpinner.setSelection(currentIndex)
-        currencySpinner.onItemSelected<Currency> { currency ->
-            TripRepository.updateDisplayCurrency(currency)
-            adapter.displayCurrency = currency
-            refreshSummary()
+        currencySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val currency = parent?.getItemAtPosition(position) as? Currency ?: return
+                TripRepository.updateDisplayCurrency(currency)
+                adapter.displayCurrency = currency
+                refreshSummary()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
     }
 

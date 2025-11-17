@@ -1,13 +1,14 @@
 package com.example.ap2
 
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import com.example.ap2.data.TripRepository
-import com.example.ap2.extensions.onItemSelected
 import com.example.ap2.model.Currency
 import com.example.ap2.model.CurrencyConverter
 import com.example.ap2.model.Money
@@ -63,9 +64,19 @@ class OverviewActivity : AppCompatActivity() {
         currencySpinner.adapter = currencyAdapter
         val currentIndex = Currency.values().indexOf(TripRepository.displayCurrency)
         currencySpinner.setSelection(currentIndex)
-        currencySpinner.onItemSelected<Currency> { currency ->
-            TripRepository.updateDisplayCurrency(currency)
-            updateSummary()
+        currencySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val currency = parent?.getItemAtPosition(position) as? Currency ?: return
+                TripRepository.updateDisplayCurrency(currency)
+                updateSummary()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
     }
 
