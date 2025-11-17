@@ -3,14 +3,15 @@
 Aplicativo Android criado para a Avaliação Parcial 2 da disciplina de Desenvolvimento Mobile. O app ajuda grupos a organizar viagens compartilhando despesas, distribuindo valores entre participantes e sugerindo acertos ao final.
 
 ## 📱 Fluxo de Telas
-1. **Onboarding:** define o nome da viagem e limpa/recupera o estado salvo.
+1. **Onboarding:** define o nome da viagem.
 2. **Participantes:** cadastro e remoção de pessoas com validações e feedbacks.
 3. **Lista de Despesas (Activity + Fragment):** hub principal com resumo da moeda e acesso ao fechamento.
 4. **Nova/Editar Despesa:** formulário completo com divisão entre participantes, ajustes individuais e múltiplas moedas.
-5. **Fechamento:** apresenta totais, saldos personalizados e transferências sugeridas, além de compartilhar o resumo via Intent implícita.
+5. **Visão Geral:** reutiliza o mesmo fragmento de despesas para mostrar um resumo da viagem (total gasto na moeda escolhida + número de participantes).
+6. **Fechamento:** apresenta totais, saldos personalizados e transferências sugeridas, além de compartilhar o resumo via Intent implícita.
 
 ## ✅ Requisitos Atendidos
-- 5 telas distintas + 1 `Fragment` funcional (`ExpensesListFragment`).
+- 5+ telas distintas + 1 `Fragment` funcional (`ExpensesListFragment`), reutilizado em `ExpensesActivity` e `OverviewActivity`.
 - Navegação explícita entre telas e Intents implícitas para abrir site, enviar e-mail e compartilhar o fechamento.
 - Mais de cinco componentes de UI (ImageView, TextInputLayout/EditText, Button, Spinner, ChipGroup, RecyclerView, FAB etc.) com feedback visual e toasts.
 - Resultado personalizado: o `ExpenseCalculator` processa todas as respostas e gera análise final com saldos e transferências.
@@ -18,9 +19,9 @@ Aplicativo Android criado para a Avaliação Parcial 2 da disciplina de Desenvol
 ## 🛠️ Stack Principal
 - Kotlin + Android Studio (Hedgehog ou superior)
 - Material Design 3
-- ViewBinding
-- RecyclerView / AdapterList
+- RecyclerView + Adapters simples com `MutableList`
 - Listas em memória para armazenar participantes e despesas enquanto o app está aberto
+- Conversão de moeda com `Currency`, `Money` e `CurrencyConverter`
 
 ## ▶️ Como Executar
 1. **Clonar o repositório**
@@ -48,14 +49,13 @@ Aplicativo Android criado para a Avaliação Parcial 2 da disciplina de Desenvol
 5. Compartilhe o resumo via Intent implícita com qualquer app de mensagens/e-mail.
 
 ## 📸 Prints do App
-Adicione seus prints na pasta `docs/screens/` e ajuste os arquivos conforme necessário.
-
 | Tela | Preview |
 | --- | --- |
 | Onboarding | ![Tela inicial](docs/screens/onboarding.png) |
 | Participantes | ![Participantes](docs/screens/participants.png) |
 | Lista de despesas | ![Despesas](docs/screens/expenses.png) |
 | Formulário de despesa | ![Nova despesa](docs/screens/add_expense.png) |
+| Visão geral | ![Visão geral](docs/screens/overview.png) |
 | Fechamento | ![Fechamento](docs/screens/settlement.png) |
 
 > Sugestão: capture prints diretamente do emulador/dispositivo (Shift + Cmd + S no Android Studio) e salve com os nomes indicados.
